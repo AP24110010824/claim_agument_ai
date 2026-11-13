@@ -1,0 +1,28 @@
+# ============================================
+# ClaimAugment AI - Dependencies
+# ============================================
+# This file is like package.json in Node.js
+# Install all: pip install -r requirements.txt
+# ============================================
+
+# --- Web Framework (like Express.js in Node) ---
+Flask==3.0.3
+
+# --- Image Processing (the core of our project) ---
+opencv-python-headless==4.10.0.84      # OpenCV without GUI (server-friendly)
+albumentations==1.4.21                  # Industry-standard augmentation library
+Pillow==10.4.0                          # Image I/O (read/write PNG, JPG, etc.)
+numpy==1.26.4                           # Math on pixel arrays
+
+# --- AI / GenAI (damage classification) ---
+# The SDK needs pydantic-core, a compiled wheel. MSYS2 Python cannot
+# install it. Milestone 1 calls https://api.groq.com with urllib instead.
+# Install this only after switching the venv to official Windows CPython.
+groq==0.11.0
+
+# --- Environment & Security ---
+python-dotenv==1.0.1                    # Load .env file (like dotenv in Node)
+
+# --- Deployment ---
+pyngrok==7.2.2                          # Ngrok tunnel (public URL for demo)
+waitress==3.0.0                         # Production WSGI server (like pm2 in Node)

@@ -1,0 +1,28 @@
+# ============================================
+# ClaimAugment AI - Git Ignore
+# ============================================
+
+# Virtual Environment (like node_modules/)
+venv/
+
+# Environment variables (SECRETS!)
+.env
+
+# Uploaded images (user data - don't commit)
+uploads/
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
