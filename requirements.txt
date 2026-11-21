@@ -18,7 +18,7 @@ numpy>=2.1.0                          # Math on pixel arrays
 # The SDK needs pydantic-core, a compiled wheel. MSYS2 Python cannot
 # install it. Milestone 1 calls https://api.groq.com with urllib instead.
 # Install this only after switching the venv to official Windows CPython.
-groq==0.11.0
+groq>=0.13.0
 
 # --- Environment & Security ---
 python-dotenv==1.0.1                    # Load .env file (like dotenv in Node)
