@@ -9,7 +9,7 @@ def get_augmentation_pipelines():
     """
     return {
         "rain": A.Compose([
-            A.RandomRain(drop_length_range=(10, 25), drop_width_range=(1, 2), p=1.0)
+            A.RandomRain(drop_length=20, drop_width=1, p=1.0)
         ]),
         "low_light": A.Compose([
             A.RandomBrightnessContrast(brightness_limit=(-0.4, -0.2), contrast_limit=(-0.2, 0.0), p=1.0)
