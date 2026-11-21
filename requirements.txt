@@ -12,7 +12,7 @@ Flask==3.0.3
 opencv-python-headless==4.10.0.84      # OpenCV without GUI (server-friendly)
 albumentations==1.4.21                  # Industry-standard augmentation library
 Pillow==10.4.0                          # Image I/O (read/write PNG, JPG, etc.)
-numpy==1.26.4                           # Math on pixel arrays
+numpy>=2.1.0                          # Math on pixel arrays
 
 # --- AI / GenAI (damage classification) ---
 # The SDK needs pydantic-core, a compiled wheel. MSYS2 Python cannot
