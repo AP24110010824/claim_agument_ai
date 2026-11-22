@@ -1,122 +1,809 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ClaimAugment AI | Automotive Damage Assessment & Dataset Engine</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ClaimAugment AI | Actuarial Vision & Synthetic Data Cockpit</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body {
+        margin: 0;
+        padding: 0;
+        background-color: #000000;
+        color: #e5e7eb;
+      }
+      body { overscroll-behavior: none; }
+    }
+    ::-webkit-scrollbar { display: none; }
+
+    /* Ultra-dark smoked glass & specular white primitives */
+    .glass-canvas {
+      background: radial-gradient(circle at 20% 12%, rgba(255, 255, 255, 0.05), transparent 45%),
+                  radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.04), transparent 42%),
+                  radial-gradient(circle at 50% 70%, rgba(255, 255, 255, 0.025), transparent 50%),
+                  #000000;
+    }
+    .glass-panel {
+      background: rgba(18, 18, 18, 0.75);
+      backdrop-filter: blur(32px) saturate(180%);
+      -webkit-backdrop-filter: blur(32px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.85), inset 0 1px 1px 0 rgba(255, 255, 255, 0.22);
+    }
+    .glass-card {
+      background: rgba(22, 22, 22, 0.6);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
+    }
+    .glass-inset {
+      background: rgba(10, 10, 10, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.75), 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+    .glass-pill {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    /* Chromatic Animations */
+    @keyframes chromaticRotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes chromaticFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes spectralSheen {
+      0% { transform: translateX(-150%) skewX(-20deg); opacity: 0; }
+      20% { opacity: 0.65; }
+      60% { opacity: 0.65; }
+      100% { transform: translateX(250%) skewX(-20deg); opacity: 0; }
+    }
+
+    /* Primary CTA chromatic hover halo */
+    .btn-chromatic-primary {
+      position: relative;
+      background: #ffffff;
+      color: #000000;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 1;
+    }
+    .btn-chromatic-primary::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: inherit;
+      background: linear-gradient(135deg, #00f0ff, #8b5cf6, #ec4899, #10b981, #00f0ff);
+      background-size: 300% 300%;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+    .btn-chromatic-primary:hover {
+      transform: translateY(-2px) scale(1.01);
+      box-shadow: 0 10px 25px -5px rgba(0, 240, 255, 0.4), 
+                  0 8px 12px -6px rgba(236, 72, 153, 0.45);
+    }
+    .btn-chromatic-primary:hover::before {
+      opacity: 1;
+      animation: chromaticFlow 4s ease infinite;
+    }
+
+    /* Secondary Glass Buttons chromatic hover edge */
+    .btn-chromatic-secondary {
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    .btn-chromatic-secondary:hover {
+      transform: translateY(-2px);
+      background: rgba(28, 28, 35, 0.9);
+      border-color: rgba(0, 240, 255, 0.6);
+      box-shadow: 0 10px 22px -5px rgba(0, 240, 255, 0.35);
+      color: #ffffff;
+    }
+
+    /* Synthetic Dataset Card - Conic Rainbow Border */
+    .dataset-card-chromatic {
+      position: relative;
+      isolation: isolate;
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+    .dataset-card-chromatic::before {
+      content: '';
+      position: absolute;
+      inset: -1.5px;
+      border-radius: 1rem;
+      background: conic-gradient(from 180deg at 50% 50%, #00F0FF, #8B5CF6, #EC4899, #F59E0B, #10B981, #00F0FF);
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+    .dataset-card-chromatic::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.12), rgba(236, 72, 153, 0.15), rgba(255, 255, 255, 0.2), transparent);
+      pointer-events: none;
+      opacity: 0;
+      z-index: 20;
+    }
+    .dataset-card-chromatic:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.8),
+                  0 0 24px -2px rgba(0, 240, 255, 0.25);
+    }
+    .dataset-card-chromatic:hover::before {
+      opacity: 1;
+      animation: chromaticRotate 6s linear infinite;
+    }
+    .dataset-card-chromatic:hover::after {
+      animation: spectralSheen 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Interactive Filter Pills */
+    .pill-chromatic {
+      transition: all 0.25s ease;
+    }
+    .pill-chromatic:hover {
+      border-color: rgba(0, 240, 255, 0.65);
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.18), rgba(0, 240, 255, 0.18));
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    /* Save Button within Dataset cards */
+    .btn-save-chromatic {
+      transition: all 0.25s ease;
+    }
+    .btn-save-chromatic:hover {
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.25), rgba(139, 92, 246, 0.3));
+      border-color: rgba(0, 240, 255, 0.7);
+      color: #ffffff;
+      transform: scale(1.04);
+    }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          fontFamily: {
+            "display-lg": ["Plus Jakarta Sans", "sans-serif"],
+            "headline-sm": ["Plus Jakarta Sans", "sans-serif"],
+            "body-md": ["Plus Jakarta Sans", "sans-serif"],
+            "label-sm": ["JetBrains Mono", "monospace"],
+            "label-md": ["JetBrains Mono", "monospace"],
+          }
+        }
+      }
+    };
+  </script>
 </head>
-<body>
+<body class="glass-canvas min-h-screen font-body-md text-zinc-200 antialiased selection:bg-cyan-400 selection:text-black overflow-x-hidden relative">
 
-    <!-- Top Navigation Bar -->
-    <header class="navbar">
-        <div class="nav-brand">
-            <span class="brand-icon">🚗⚡</span>
-            <div class="brand-text">
-                <h2>ClaimAugment <span class="badge-ai">AI</span></h2>
-                <p>InsurTech Damage Assessment & Synthetic Augmentation Engine</p>
+<!-- Hidden File Input -->
+<input type="file" id="hidden-file-input" accept="image/png, image/jpeg, image/jpg, image/webp" hidden>
+
+<!-- Ambient Glow Orbs -->
+<div class="fixed top-8 left-20 w-[30rem] h-[30rem] bg-white/[0.04] rounded-full blur-[140px] pointer-events-none -z-10"></div>
+<div class="fixed top-1/4 right-14 w-[36rem] h-[36rem] bg-white/[0.035] rounded-full blur-[160px] pointer-events-none -z-10"></div>
+
+<!-- MAIN VIEWPORT CONTENT (Full-width responsive container) -->
+<div class="max-w-[1600px] mx-auto px-6 py-6 min-h-screen flex flex-col">
+  <!-- TOP HEADER -->
+  <header class="glass-panel h-16 rounded-2xl px-6 flex items-center justify-between mb-6 sticky top-5 z-40 border border-white/15">
+    <div class="flex items-center gap-4">
+      <div class="w-9 h-9 rounded-xl bg-white flex items-center justify-center text-black shadow-[0_0_16px_rgba(255,255,255,0.4)]">
+        <span class="material-symbols-outlined text-[20px] font-bold text-black">bolt</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="font-headline-sm text-lg font-bold tracking-tight text-white">ClaimAugment</span>
+        <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold tracking-widest uppercase bg-white/10 text-white border border-white/20">AI</span>
+      </div>
+      <div class="hidden md:flex items-center gap-2 ml-4 px-3 py-1.5 rounded-full glass-pill text-xs border border-white/15">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.9)]"></span>
+        <span class="font-label-sm text-[11px] text-zinc-300 font-semibold">Groq LPU (openai/gpt-oss-20b)</span>
+        <span class="text-zinc-500">•</span>
+        <span class="font-label-sm text-[11px] text-cyan-300 font-medium" id="hud-latency">~28ms latency</span>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/10 border border-white/20 text-white">
+        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+        <span class="font-label-sm text-[10px] text-zinc-400 uppercase tracking-widest font-semibold">Status:</span>
+        <span class="font-label-sm text-xs font-bold text-white">PRODUCTION ACTIVE</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Primary Workspace Grid -->
+  <main class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+    
+    <!-- LEFT COLUMN: Claim Submission & Viewport (5 cols) -->
+    <div class="xl:col-span-5 flex flex-col gap-6">
+      <div class="glass-panel rounded-3xl p-6 relative overflow-hidden flex flex-col gap-5 border border-white/15">
+        <div class="flex items-start justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-white shadow-[0_0_16px_rgba(255,255,255,0.15)]">
+              <span class="material-symbols-outlined text-[22px]">description</span>
             </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="font-headline-sm text-base text-white font-bold tracking-tight">New Claim Submission</h2>
+                <span class="font-label-sm text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-zinc-200 border border-white/20 font-semibold">LIVE PIPELINE</span>
+              </div>
+              <p class="text-xs text-zinc-400 mt-0.5">Upload damage photo & collision notes for automated AI appraisal.</p>
+            </div>
+          </div>
+          <span class="font-label-sm text-[11px] px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white flex items-center gap-1.5 shadow-[0_0_12px_rgba(255,255,255,0.15)]">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+            Ready
+          </span>
         </div>
-        <div class="system-status">
-            <span class="status-dot"></span>
-            <span>Groq LPU Active (openai/gpt-oss-20b)</span>
-        </div>
-    </header>
 
-    <!-- Main Content Grid -->
-    <main class="container">
-        <!-- LEFT PANEL: Claim Ingestion Form -->
-        <section class="card input-card">
-            <h3>📋 New Claim Submission</h3>
-            <p class="subtitle">Upload damage photo & collision notes for automated AI appraisal.</p>
+        <!-- Inspection Viewport (Clickable Dropzone) -->
+        <div class="relative w-full rounded-2xl overflow-hidden group border border-white/20 shadow-2xl bg-black transition-all duration-300 hover:border-cyan-400/50 hover:shadow-[0_0_30px_rgba(0,240,255,0.18)] cursor-pointer" id="viewport-container" title="Click to upload damage photo">
+          <div class="relative aspect-[16/10] w-full overflow-hidden flex items-center justify-center">
+            <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" id="inspection-master-photo" src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=800&auto=format&fit=crop" alt="Inspection vehicle photo"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-black/40 pointer-events-none"></div>
 
-            <form id="claimForm">
-                <!-- Dropzone Area -->
-                <div class="dropzone" id="dropzone">
-                    <input type="file" id="photoInput" name="photo" accept="image/png, image/jpeg, image/jpg, image/webp" hidden>
-                    <div class="dropzone-content" id="dropzonePrompt">
-                        <span class="upload-icon">📷</span>
-                        <p><strong>Click to upload</strong> or drag and drop</p>
-                        <span class="file-hint">JPEG, PNG, WEBP (Max 16MB)</span>
-                    </div>
-                    <div class="preview-container" id="previewContainer" style="display: none;">
-                        <img id="imagePreview" src="" alt="Selected vehicle damage photo">
-                        <button type="button" class="btn-remove" id="btnRemovePhoto">✕ Change Photo</button>
-                    </div>
+            <div class="absolute inset-0 p-4 pointer-events-none flex flex-col justify-between">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5 glass-pill px-2.5 py-1 rounded-full border border-white/20">
+                  <span class="material-symbols-outlined text-[13px] text-zinc-300">verified</span>
+                  <span class="font-label-sm text-[10px] text-white" id="hud-file-meta">ORIGINAL PHOTO LOADED</span>
                 </div>
-
-                <!-- Claims Notes Area -->
-                <div class="form-group">
-                    <label for="notesInput">Claim Adjuster Notes / Description</label>
-                    <div class="preset-pills">
-                        <button type="button" class="preset-btn" data-preset="Front bumper crumpled with radiator leak and headlight broken.">💥 Frontal Collision</button>
-                        <button type="button" class="preset-btn" data-preset="Superficial 4-inch paint scratch along rear passenger door.">🎨 Door Scratch</button>
-                        <button type="button" class="preset-btn" data-preset="Hail storm impact dents on hood and cracked windshield glass.">🌨️ Hail & Glass</button>
-                    </div>
-                    <textarea id="notesInput" name="notes" rows="3" placeholder="Enter crash details, impacted components, or damage observations..."></textarea>
+                <div class="flex items-center gap-1.5 glass-pill px-2.5 py-1 rounded-full border border-white/20">
+                  <span class="material-symbols-outlined text-[13px] text-cyan-300">crop_free</span>
+                  <span class="font-label-sm text-[10px] text-white">OPENCV 4.10 READY</span>
                 </div>
+              </div>
 
-                <!-- Submit Button -->
-                <button type="submit" class="btn-primary" id="btnSubmit">
-                    <span id="btnText">⚡ Process Claim & Generate Dataset</span>
-                    <span id="btnSpinner" class="spinner" style="display: none;"></span>
+              <!-- HUD Bounding Box Overlay -->
+              <div class="relative mx-auto w-[82%] h-28 rounded-xl bg-white/[0.06] border border-white/60 shadow-[0_0_24px_rgba(255,255,255,0.25)] flex flex-col justify-between p-2.5 backdrop-blur-[2px] transition-all group-hover:border-cyan-400/80 group-hover:shadow-[0_0_28px_rgba(0,240,255,0.35)]">
+                <div class="flex items-center justify-between font-label-sm text-[10px]">
+                  <span class="glass-pill px-2 py-0.5 rounded-md text-white flex items-center gap-1.5 border-white/30">
+                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
+                    IMPACT SCANNER
+                  </span>
+                  <span class="glass-pill px-2 py-0.5 rounded-md text-zinc-200 border-white/30">ALBUMENTATIONS ACTIVE</span>
+                </div>
+                <div class="flex justify-between items-end">
+                  <span class="font-label-sm text-[10px] text-zinc-300">5 TRANSFORM PIPELINES</span>
+                  <span class="font-label-sm text-[10px] text-black font-bold px-1.5 py-0.5 rounded bg-white shadow-[0_0_10px_rgba(255,255,255,0.4)]" id="hud-severity-tag">ANALYSIS PENDING</span>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between pointer-events-auto">
+                <span class="font-label-sm text-[10px] text-white font-semibold glass-pill px-2.5 py-1 rounded-full border border-white/30 shadow-[0_0_10px_rgba(255,255,255,0.15)]">
+                  CLICK CANVAS TO CHANGE PHOTO
+                </span>
+                <button class="px-3 py-1 rounded-xl glass-pill pill-chromatic text-white font-label-md text-xs flex items-center gap-1 transition-all border border-white/20" id="btn-trigger-upload" type="button">
+                  <span class="material-symbols-outlined text-[15px] text-white">sync</span>
+                  <span>Select Image</span>
                 </button>
-            </form>
-        </section>
-
-        <!-- RIGHT PANEL: Live Intelligence & Results -->
-        <section class="card results-card" id="resultsSection">
-            <!-- Empty State -->
-            <div class="empty-state" id="emptyState">
-                <span class="empty-icon">📊</span>
-                <h4>No Claim Processed Yet</h4>
-                <p>Upload a vehicle photo and click "Process Claim" to see real-time AI damage categorization and 5-point synthetic dataset augmentations.</p>
+              </div>
             </div>
+          </div>
+        </div>
 
-            <!-- Dynamic Results Container -->
-            <div id="resultsContent" style="display: none;">
-                <!-- AI Assessment Overview -->
-                <div class="ai-overview-card">
-                    <div class="overview-header">
-                        <h4>🤖 AI Damage Intelligence Report</h4>
-                        <span class="confidence-badge" id="resConfidence">Confidence: 95%</span>
-                    </div>
-                    <div class="metric-badges">
-                        <div class="metric-pill">
-                            <span class="metric-label">Damage Type</span>
-                            <span class="metric-value" id="resDamageType">STRUCTURAL</span>
-                        </div>
-                        <div class="metric-pill">
-                            <span class="metric-label">Severity</span>
-                            <span class="metric-value severity-badge" id="resSeverity">SEVERE</span>
-                        </div>
-                        <div class="metric-pill">
-                            <span class="metric-label">Recommended Action</span>
-                            <span class="metric-value" id="resAction">REPLACE</span>
-                        </div>
-                    </div>
-                    <div class="summary-box">
-                        <p id="resSummary">"Severe collision damage requiring replacement."</p>
-                    </div>
-                </div>
+        <!-- Collision Impact Zone Selectors -->
+        <div>
+          <label class="block font-label-sm text-[10px] uppercase text-zinc-400 mb-2 tracking-widest font-semibold">Collision Impact Zone Presets</label>
+          <div class="flex flex-wrap gap-2" id="impact-tags-container">
+            <button class="px-3.5 py-1.5 rounded-full bg-white text-black font-bold text-xs flex items-center gap-1.5 shadow-[0_0_18px_rgba(255,255,255,0.35)] transition-all cursor-pointer" data-note="Front bumper crumpled with radiator core leak, frame rails compromised, and headlight shattered." type="button">
+              <span class="material-symbols-outlined text-[15px] text-black font-bold">emergency</span>
+              <span>Frontal Collision</span>
+            </button>
+            <button class="px-3.5 py-1.5 rounded-full glass-card pill-chromatic text-zinc-300 text-xs font-medium flex items-center gap-1.5 transition-all border border-white/20 cursor-pointer" data-note="Superficial 5-inch paint scratch along passenger door panel, clear coat abrasion only." type="button">
+              <span class="material-symbols-outlined text-[15px] text-zinc-400">car_crash</span>
+              <span>Door Scratch</span>
+            </button>
+            <button class="px-3.5 py-1.5 rounded-full glass-card pill-chromatic text-zinc-300 text-xs font-medium flex items-center gap-1.5 transition-all border border-white/20 cursor-pointer" data-note="Severe hail storm damage across hood panel and cracked front windshield safety glass." type="button">
+              <span class="material-symbols-outlined text-[15px] text-zinc-400">grain</span>
+              <span>Hail &amp; Glass</span>
+            </button>
+          </div>
+        </div>
 
-                <!-- Augmented Dataset Gallery -->
-                <div class="dataset-header">
-                    <h4>📸 Augmented Training Dataset (5 Conditions)</h4>
-                    <span class="dataset-count">5 Variations Created</span>
-                </div>
-                
-                <div class="gallery-grid" id="galleryGrid">
-                    <!-- Populated dynamically via JavaScript -->
-                </div>
+        <!-- Adjuster Notes Input Area -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label class="font-label-sm text-[10px] uppercase text-zinc-400 tracking-widest font-semibold" for="adjuster-notes">
+              Claim Adjuster Notes / Description
+            </label>
+            <span class="font-label-sm text-[10px] text-cyan-400">Actuarial NLP Verified</span>
+          </div>
+          <div class="relative group">
+            <textarea class="w-full rounded-2xl glass-inset p-3.5 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/40 transition-all resize-none leading-relaxed border border-white/15" id="adjuster-notes" rows="3">Front bumper crumpled with radiator core leak, frame rails compromised, and headlight shattered.</textarea>
+          </div>
+        </div>
+
+        <!-- Primary Monochrome Processing Button -->
+        <button class="btn-chromatic-primary w-full py-4 px-4 rounded-2xl font-extrabold text-sm tracking-tight flex items-center justify-center gap-2.5 group cursor-pointer shadow-[0_0_26px_rgba(255,255,255,0.3)]" id="process-claim-btn" type="button">
+          <span class="material-symbols-outlined text-[20px] font-bold text-black" id="btn-icon">bolt</span>
+          <span id="btn-label">Process Claim &amp; Generate Dataset</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: Intelligence & Synthetic Dataset (7 cols) -->
+    <div class="xl:col-span-7 flex flex-col gap-6">
+      
+      <!-- AI Damage Intelligence Report Panel -->
+      <div class="glass-panel rounded-3xl p-6 relative overflow-hidden flex flex-col gap-4 border border-white/15">
+        <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-white/10">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-white shadow-[0_0_16px_rgba(255,255,255,0.15)]">
+              <span class="material-symbols-outlined text-[22px]">smart_toy</span>
             </div>
-        </section>
-    </main>
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="font-headline-sm text-base text-white font-bold tracking-tight">AI Damage Intelligence Report</h3>
+                <span class="font-label-sm text-[10px] text-zinc-400">Actuary Engine</span>
+              </div>
+              <p class="text-xs text-zinc-400">Multi-modal deep visual feature extraction</p>
+            </div>
+          </div>
+          <div class="pill-chromatic flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-white shadow-[0_0_14px_rgba(255,255,255,0.1)]">
+            <span class="material-symbols-outlined text-[15px] text-white">verified_user</span>
+            <span class="font-label-sm text-xs font-bold text-white" id="card-confidence">Confidence: 94.8%</span>
+          </div>
+        </div>
 
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+        <!-- 3 Glass KPI Metric Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <!-- KPI 1: Structural -->
+          <div class="p-4 rounded-2xl glass-card flex flex-col justify-between border border-white/15">
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-label-sm text-[10px] text-zinc-400 uppercase tracking-wider font-semibold">DAMAGE TYPE</span>
+              <span class="material-symbols-outlined text-[17px] text-zinc-300">category</span>
+            </div>
+            <div>
+              <div class="font-headline-sm text-lg font-bold text-white tracking-tight" id="card-damage-type">STRUCTURAL</div>
+              <div class="text-xs text-zinc-400 mt-0.5">Impact Vector Classified</div>
+            </div>
+            <div class="w-full bg-white/15 h-1.5 rounded-full mt-3 overflow-hidden p-[1px]">
+              <div class="bg-gradient-to-r from-cyan-400 to-blue-500 h-full w-[85%] rounded-full shadow-[0_0_8px_rgba(0,240,255,0.6)]"></div>
+            </div>
+          </div>
+
+          <!-- KPI 2: Severity -->
+          <div class="p-4 rounded-2xl glass-card flex flex-col justify-between border border-white/20">
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-label-sm text-[10px] text-zinc-400 uppercase tracking-wider font-semibold">SEVERITY</span>
+              <span class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/15 border border-white/30 text-white font-label-sm text-[9px] font-bold uppercase shadow-[0_0_10px_rgba(255,255,255,0.15)]" id="card-severity-badge">
+                <span class="w-1.5 h-1.5 rounded-full bg-pink-500 animate-ping"></span>
+                Critical
+              </span>
+            </div>
+            <div>
+              <div class="font-headline-sm text-lg font-bold text-white tracking-tight" id="card-severity-text">SEVERE</div>
+              <div class="text-xs text-zinc-400 mt-0.5">Crumple threshold evaluation</div>
+            </div>
+            <div class="w-full bg-white/15 h-1.5 rounded-full mt-3 overflow-hidden p-[1px]">
+              <div class="bg-gradient-to-r from-pink-500 to-rose-400 h-full w-[90%] rounded-full shadow-[0_0_8px_rgba(236,72,153,0.6)]" id="card-severity-bar"></div>
+            </div>
+          </div>
+
+          <!-- KPI 3: Action -->
+          <div class="p-4 rounded-2xl glass-card flex flex-col justify-between border border-white/15">
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-label-sm text-[10px] text-zinc-400 uppercase tracking-wider font-semibold">RECOMMENDED ACTION</span>
+              <span class="material-symbols-outlined text-[17px] text-zinc-300">build</span>
+            </div>
+            <div>
+              <div class="font-headline-sm text-lg font-bold text-white tracking-tight" id="card-action-text">REPAIR</div>
+              <div class="text-xs text-zinc-400 mt-0.5">Assembly & Alignment</div>
+            </div>
+            <div class="w-full bg-white/15 h-1.5 rounded-full mt-3 overflow-hidden p-[1px]">
+              <div class="bg-gradient-to-r from-purple-400 to-cyan-400 h-full w-[70%] rounded-full shadow-[0_0_8px_rgba(139,92,246,0.5)]"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VisionOS Diagnostic Callout Card -->
+        <div class="p-4 rounded-2xl glass-inset flex items-start gap-3 border border-white/10">
+          <div class="w-8 h-8 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white shrink-0 mt-0.5 shadow-[0_0_12px_rgba(255,255,255,0.1)]">
+            <span class="material-symbols-outlined text-[18px]">format_quote</span>
+          </div>
+          <div class="flex-1">
+            <p class="text-xs text-zinc-200 italic leading-relaxed" id="card-summary-text">
+              “Front impact from collision caused severe structural damage requiring radiator core replacement and frame realignment.”
+            </p>
+            <div class="flex items-center justify-between mt-2.5 pt-2 border-t border-white/10 font-label-sm text-[10px]">
+              <span class="text-white font-semibold">Actuarial Assessment Synthesizer • Groq LPU</span>
+              <span class="text-zinc-500">Zero Hallucination Verified</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Financial & Actuarial Breakdown Strip -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 p-2 rounded-2xl glass-card border border-white/15">
+          <div class="p-3 rounded-xl glass-inset flex flex-col border border-white/10">
+            <span class="font-label-sm text-[9px] text-zinc-400 uppercase tracking-wider font-semibold">Est. Total Cost</span>
+            <span class="font-headline-sm text-base font-bold text-white mt-0.5" id="stat-cost">$8,450.00</span>
+            <span class="font-label-sm text-[10px] text-zinc-400 mt-0.5">Parts + Labor Blend</span>
+          </div>
+          <div class="p-3 rounded-xl glass-inset flex flex-col border border-white/10">
+            <span class="font-label-sm text-[9px] text-zinc-400 uppercase tracking-wider font-semibold">Labor Est.</span>
+            <span class="font-headline-sm text-base font-bold text-white mt-0.5" id="stat-labor">34.5 hrs</span>
+            <span class="font-label-sm text-[10px] text-zinc-400 mt-0.5">Certified Shop Rate</span>
+          </div>
+          <div class="p-3 rounded-xl glass-inset flex flex-col border border-white/10">
+            <span class="font-label-sm text-[9px] text-zinc-400 uppercase tracking-wider font-semibold">Total Loss Prob.</span>
+            <span class="font-headline-sm text-base font-bold text-white mt-0.5" id="stat-loss">22%</span>
+            <span class="font-label-sm text-[10px] text-zinc-400 mt-0.5">Threshold at 75%</span>
+          </div>
+          <div class="p-3 rounded-xl glass-inset flex flex-col border border-white/10">
+            <span class="font-label-sm text-[9px] text-zinc-400 uppercase tracking-wider font-semibold">Fraud Risk</span>
+            <span class="font-headline-sm text-base font-bold text-white mt-0.5">0.04%</span>
+            <span class="font-label-sm text-[10px] text-emerald-400 mt-0.5">Clean Metadata Match</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Augmented Training Dataset (6 Cards) -->
+      <div class="glass-panel rounded-3xl p-6 relative overflow-hidden flex flex-col gap-4 border border-white/15">
+        <div class="flex flex-wrap items-center justify-between gap-3 pb-2">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-white shadow-[0_0_16px_rgba(255,255,255,0.15)]">
+              <span class="material-symbols-outlined text-[22px]">burst_mode</span>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="font-headline-sm text-base text-white font-bold tracking-tight">Augmented Training Dataset</h3>
+                <span class="font-label-sm text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-white border border-white/20 font-semibold">6 Variations Synthesized</span>
+              </div>
+              <p class="text-xs text-zinc-400">Photometric & atmospheric edge-case simulations for ML robustness</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6-CARD GRID: 2 Rows x 3 Columns -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+          <!-- Card 1: Original Baseline -->
+          <div class="dataset-card-chromatic glass-card rounded-2xl overflow-hidden flex flex-col group border border-white/15">
+            <div class="relative aspect-[16/10] overflow-hidden bg-black">
+              <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" id="card-img-original" src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=400&auto=format&fit=crop" alt="Original Photo"/>
+              <div class="absolute top-2 left-2 px-2 py-0.5 rounded-md glass-pill text-[9px] font-label-sm text-white uppercase font-semibold border border-white/30">Baseline</div>
+            </div>
+            <div class="p-3 flex items-center justify-between relative z-10 bg-black/80 backdrop-blur-md">
+              <div class="flex flex-col">
+                <span class="font-label-sm text-xs font-bold text-white tracking-wide uppercase">ORIGINAL PHOTO</span>
+                <span class="font-label-sm text-[10px] text-zinc-400">RAW Unfiltered</span>
+              </div>
+              <a class="btn-save-chromatic px-2.5 py-1 rounded-lg glass-inset text-white font-label-sm text-[11px] font-medium flex items-center gap-1 transition-all border border-white/10" id="dl-original" href="#" download>
+                <span class="material-symbols-outlined text-[13px]">download</span>
+                <span>Save</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Card 2: Rain -->
+          <div class="dataset-card-chromatic glass-card rounded-2xl overflow-hidden flex flex-col group border border-white/15">
+            <div class="relative aspect-[16/10] overflow-hidden bg-black">
+              <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" id="card-img-rain" src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=400&auto=format&fit=crop" alt="Rain condition"/>
+              <div class="absolute top-2 left-2 px-2 py-0.5 rounded-md glass-pill text-[9px] font-label-sm text-zinc-300 uppercase font-semibold border border-white/20">Stochastic 65mm</div>
+            </div>
+            <div class="p-3 flex items-center justify-between relative z-10 bg-black/80 backdrop-blur-md">
+              <div class="flex flex-col">
+                <span class="font-label-sm text-xs font-bold text-white tracking-wide uppercase">RAIN</span>
+                <span class="font-label-sm text-[10px] text-zinc-400">Streak Refraction</span>
+              </div>
+              <a class="btn-save-chromatic px-2.5 py-1 rounded-lg glass-inset text-white font-label-sm text-[11px] font-medium flex items-center gap-1 transition-all border border-white/10" id="dl-rain" href="#" download>
+                <span class="material-symbols-outlined text-[13px]">download</span>
+                <span>Save</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Card 3: Low Light -->
+          <div class="dataset-card-chromatic glass-card rounded-2xl overflow-hidden flex flex-col group border border-white/15">
+            <div class="relative aspect-[16/10] overflow-hidden bg-black">
+              <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" id="card-img-low_light" src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=400&auto=format&fit=crop" alt="Low Light condition"/>
+              <div class="absolute top-2 left-2 px-2 py-0.5 rounded-md glass-pill text-[9px] font-label-sm text-zinc-300 uppercase font-semibold border border-white/20">0.2 Lux Night</div>
+            </div>
+            <div class="p-3 flex items-center justify-between relative z-10 bg-black/80 backdrop-blur-md">
+              <div class="flex flex-col">
+                <span class="font-label-sm text-xs font-bold text-white tracking-wide uppercase">LOW LIGHT</span>
+                <span class="font-label-sm text-[10px] text-zinc-400">Night Underexposure</span>
+              </div>
+              <a class="btn-save-chromatic px-2.5 py-1 rounded-lg glass-inset text-white font-label-sm text-[11px] font-medium flex items-center gap-1 transition-all border border-white/10" id="dl-low_light" href="#" download>
+                <span class="material-symbols-outlined text-[13px]">download</span>
+                <span>Save</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Card 4: Glare -->
+          <div class="dataset-card-chromatic glass-card rounded-2xl overflow-hidden flex flex-col group border border-white/15">
+            <div class="relative aspect-[16/10] overflow-hidden bg-black">
+              <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" id="card-img-glare" src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=400&auto=format&fit=crop" alt="Glare condition"/>
+              <div class="absolute top-2 left-2 px-2 py-0.5 rounded-md glass-pill text-[9px] font-label-sm text-white uppercase font-semibold border border-white/30">Overexposed</div>
+            </div>
+            <div class="p-3 flex items-center justify-between relative z-10 bg-black/80 backdrop-blur-md">
+              <div class="flex flex-col">
+                <span class="font-label-sm text-xs font-bold text-white tracking-wide uppercase">GLARE</span>
+                <span class="font-label-sm text-[10px] text-zinc-400">Solar Flare Optical</span>
+              </div>
+              <a class="btn-save-chromatic px-2.5 py-1 rounded-lg glass-inset text-white font-label-sm text-[11px] font-medium flex items-center gap-1 transition-all border border-white/10" id="dl-glare" href="#" download>
+                <span class="material-symbols-outlined text-[13px]">download</span>
+                <span>Save</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Card 5: Fog -->
+          <div class="dataset-card-chromatic glass-card rounded-2xl overflow-hidden flex flex-col group border border-white/15">
+            <div class="relative aspect-[16/10] overflow-hidden bg-black">
+              <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" id="card-img-fog" src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=400&auto=format&fit=crop" alt="Fog condition"/>
+              <div class="absolute top-2 left-2 px-2 py-0.5 rounded-md glass-pill text-[9px] font-label-sm text-zinc-300 uppercase font-semibold border border-white/20">Vis: 40m</div>
+            </div>
+            <div class="p-3 flex items-center justify-between relative z-10 bg-black/80 backdrop-blur-md">
+              <div class="flex flex-col">
+                <span class="font-label-sm text-xs font-bold text-white tracking-wide uppercase">FOG</span>
+                <span class="font-label-sm text-[10px] text-zinc-400">Atmospheric Density</span>
+              </div>
+              <a class="btn-save-chromatic px-2.5 py-1 rounded-lg glass-inset text-white font-label-sm text-[11px] font-medium flex items-center gap-1 transition-all border border-white/10" id="dl-fog" href="#" download>
+                <span class="material-symbols-outlined text-[13px]">download</span>
+                <span>Save</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Card 6: Sensor Noise -->
+          <div class="dataset-card-chromatic glass-card rounded-2xl overflow-hidden flex flex-col group border border-white/15">
+            <div class="relative aspect-[16/10] overflow-hidden bg-black">
+              <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" id="card-img-sensor_noise" src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=400&auto=format&fit=crop" alt="Sensor Noise condition"/>
+              <div class="absolute top-2 left-2 px-2 py-0.5 rounded-md glass-pill text-[9px] font-label-sm text-zinc-300 uppercase font-semibold border border-white/20">ISO 12800</div>
+            </div>
+            <div class="p-3 flex items-center justify-between relative z-10 bg-black/80 backdrop-blur-md">
+              <div class="flex flex-col">
+                <span class="font-label-sm text-xs font-bold text-white tracking-wide uppercase">SENSOR NOISE</span>
+                <span class="font-label-sm text-[10px] text-zinc-400">Chroma Grain Sim</span>
+              </div>
+              <a class="btn-save-chromatic px-2.5 py-1 rounded-lg glass-inset text-white font-label-sm text-[11px] font-medium flex items-center gap-1 transition-all border border-white/10" id="dl-sensor_noise" href="#" download>
+                <span class="material-symbols-outlined text-[13px]">download</span>
+                <span>Save</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Real Action Bar -->
+        <div class="mt-2 pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <button class="btn-chromatic-secondary px-4 py-2.5 rounded-xl glass-pill text-white font-label-md text-xs flex items-center gap-2 transition-all border border-white/20 cursor-pointer" id="btn-export-zip" type="button">
+              <span class="material-symbols-outlined text-[16px] text-zinc-300">archive</span>
+              <span>Export Dataset (ZIP)</span>
+            </button>
+            <button class="btn-chromatic-secondary px-4 py-2.5 rounded-xl glass-pill text-white font-label-md text-xs flex items-center gap-2 transition-all border border-white/20 cursor-pointer" id="btn-export-json" type="button">
+              <span class="material-symbols-outlined text-[16px] text-zinc-300">data_object</span>
+              <span>Export JSON Manifest</span>
+            </button>
+          </div>
+          <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-zinc-400 font-label-sm text-[11px]">
+            <span class="material-symbols-outlined text-[15px] text-emerald-400">verified</span>
+            <span>Actuarial Certified Output</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- CLIENT JAVASCRIPT: 100% Functional Event Wiring -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    let currentSelectedFile = null;
+    let latestResponseData = null;
+
+    const fileInput = document.getElementById("hidden-file-input");
+    const viewportContainer = document.getElementById("viewport-container");
+    const masterPhoto = document.getElementById("inspection-master-photo");
+    const hudFileMeta = document.getElementById("hud-file-meta");
+    const btnTriggerUpload = document.getElementById("btn-trigger-upload");
+    const adjusterNotes = document.getElementById("adjuster-notes");
+    const processBtn = document.getElementById("process-claim-btn");
+    const btnIcon = document.getElementById("btn-icon");
+    const btnLabel = document.getElementById("btn-label");
+
+    // Report Cards
+    const cardConfidence = document.getElementById("card-confidence");
+    const cardDamageType = document.getElementById("card-damage-type");
+    const cardSeverityBadge = document.getElementById("card-severity-badge");
+    const cardSeverityText = document.getElementById("card-severity-text");
+    const cardSeverityBar = document.getElementById("card-severity-bar");
+    const cardActionText = document.getElementById("card-action-text");
+    const cardSummaryText = document.getElementById("card-summary-text");
+    const statCost = document.getElementById("stat-cost");
+    const statLabor = document.getElementById("stat-labor");
+    const statLoss = document.getElementById("stat-loss");
+
+    // 1. File Upload Handler
+    viewportContainer.addEventListener("click", () => fileInput.click());
+    btnTriggerUpload.addEventListener("click", (e) => {
+        e.stopPropagation();
+        fileInput.click();
+    });
+
+    fileInput.addEventListener("change", (e) => {
+        if (e.target.files && e.target.files[0]) {
+            currentSelectedFile = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                masterPhoto.src = event.target.result;
+                hudFileMeta.textContent = `${currentSelectedFile.name.toUpperCase()} • ${(currentSelectedFile.size / 1024).toFixed(0)}KB`;
+            };
+            reader.readAsDataURL(currentSelectedFile);
+        }
+    });
+
+    // 2. Preset Buttons Handler
+    document.querySelectorAll("#impact-tags-container button").forEach((btn) => {
+        btn.addEventListener("click", function() {
+            document.querySelectorAll("#impact-tags-container button").forEach((b) => {
+                b.className = "px-3.5 py-1.5 rounded-full glass-card pill-chromatic text-zinc-300 text-xs font-medium flex items-center gap-1.5 transition-all border border-white/20 cursor-pointer";
+                const icon = b.querySelector('.material-symbols-outlined');
+                if (icon) icon.className = "material-symbols-outlined text-[15px] text-zinc-400";
+            });
+            this.className = "px-3.5 py-1.5 rounded-full bg-white text-black font-bold text-xs flex items-center gap-1.5 shadow-[0_0_18px_rgba(255,255,255,0.35)] transition-all cursor-pointer";
+            const icon = this.querySelector('.material-symbols-outlined');
+            if (icon) icon.className = "material-symbols-outlined text-[15px] text-black font-bold";
+            adjusterNotes.value = this.getAttribute("data-note");
+        });
+    });
+
+    // 3. Process Claim Handler
+    processBtn.addEventListener("click", async () => {
+        if (!currentSelectedFile) {
+            alert("Please select or drop a vehicle damage photo first.");
+            fileInput.click();
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("photo", currentSelectedFile);
+        formData.append("notes", adjusterNotes.value.trim());
+
+        processBtn.disabled = true;
+        btnIcon.className = "material-symbols-outlined text-[20px] animate-spin text-black";
+        btnLabel.textContent = "Inferring Damage Vectors & Synthesizing...";
+
+        const startTime = performance.now();
+
+        try {
+            const res = await fetch("/api/process-claim", {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await res.json();
+            if (!res.ok || result.status !== "success") {
+                throw new Error(result.message || "Pipeline execution failed.");
+            }
+
+            const latency = Math.round(performance.now() - startTime);
+            document.getElementById("hud-latency").textContent = `${latency}ms inference`;
+
+            latestResponseData = result.data;
+            renderCockpit(result.data);
+
+        } catch (err) {
+            alert(`Error: ${err.message}`);
+        } finally {
+            processBtn.disabled = false;
+            btnIcon.className = "material-symbols-outlined text-[20px] font-bold text-black";
+            btnLabel.textContent = "Process Claim & Generate Dataset";
+        }
+    });
+
+    function renderCockpit(data) {
+        const ai = data.ai_assessment;
+
+        cardConfidence.textContent = `Confidence: ${(ai.confidence_score * 100).toFixed(1)}%`;
+        cardDamageType.textContent = ai.damage_type;
+        cardSeverityText.textContent = ai.severity;
+        cardActionText.textContent = ai.estimated_action;
+        cardSummaryText.textContent = `“${ai.summary}”`;
+
+               if (ai.severity === "SEVERE") {
+            cardSeverityText.className = "font-headline-sm text-lg font-bold text-rose-400 tracking-tight";
+            cardSeverityBar.className = "bg-gradient-to-r from-pink-500 to-rose-400 h-full w-[95%] rounded-full shadow-[0_0_8px_rgba(236,72,153,0.6)]";
+            cardSeverityBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-pink-500 animate-ping"></span> Critical';
+        } else if (ai.severity === "MODERATE") {
+            cardSeverityText.className = "font-headline-sm text-lg font-bold text-amber-400 tracking-tight";
+            cardSeverityBar.className = "bg-gradient-to-r from-amber-500 to-yellow-400 h-full w-[65%] rounded-full shadow-[0_0_8px_rgba(245,158,11,0.6)]";
+            cardSeverityBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Moderate';
+        } else {
+            cardSeverityText.className = "font-headline-sm text-lg font-bold text-emerald-400 tracking-tight";
+            cardSeverityBar.className = "bg-gradient-to-r from-emerald-500 to-teal-400 h-full w-[35%] rounded-full shadow-[0_0_8px_rgba(52,211,153,0.6)]";
+            cardSeverityBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Minor';
+        }
+
+        // DYNAMIC FINANCIALS FROM ACTUARIAL ENGINE
+        if (ai.financial_breakdown) {
+            statCost.textContent = ai.financial_breakdown.total_cost;
+            statLabor.textContent = ai.financial_breakdown.labor_hours;
+            statLoss.textContent = ai.financial_breakdown.total_loss_probability;
+        }
+
+        // Update Images
+        document.getElementById("card-img-original").src = data.original_image.url;
+        document.getElementById("dl-original").href = data.original_image.url;
+
+        data.augmented_images.forEach((aug) => {
+            const imgEl = document.getElementById(`card-img-${aug.effect}`);
+            const dlEl = document.getElementById(`dl-${aug.effect}`);
+            if (imgEl) imgEl.src = aug.url;
+            if (dlEl) dlEl.href = aug.url;
+        });
+    }
+
+    // 4. One-Click ZIP Export
+    document.getElementById("btn-export-zip").addEventListener("click", async () => {
+        if (!latestResponseData) {
+            alert("Please process a claim first to generate the dataset.");
+            return;
+        }
+
+        const imagesList = [latestResponseData.original_image, ...latestResponseData.augmented_images];
+        const res = await fetch("/api/export-zip", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                images: imagesList,
+                ai_assessment: latestResponseData.ai_assessment
+            })
+        });
+
+        if (!res.ok) {
+            alert("Failed to create ZIP export.");
+            return;
+        }
+
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "ClaimAugment_Synthetic_Dataset.zip";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+    });
+
+    // 5. One-Click JSON Export
+    document.getElementById("btn-export-json").addEventListener("click", () => {
+        if (!latestResponseData) {
+            alert("Please process a claim first to generate the dataset.");
+            return;
+        }
+        const blob = new Blob([JSON.stringify(latestResponseData, null, 2)], { type: "application/json" });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "ClaimAugment_Manifest.json";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+    });
+});
+</script>
 </body>
 </html>
