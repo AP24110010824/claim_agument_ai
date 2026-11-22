@@ -4,28 +4,28 @@ import albumentations as A
 
 def get_augmentation_pipelines():
     """
-    Defines 5 realistic, visually distinct insurance environmental pipelines.
-    Using modern Albumentations 1.4+ syntax.
+    Defines 5 realistic insurance environmental pipelines.
+    Using modern Albumentations 1.4+ tuple range syntax.
     """
     return {
         "rain": A.Compose([
             A.RandomRain(drop_length=20, drop_width=1, p=1.0)
         ]),
         "low_light": A.Compose([
-            # Visibly darkens to simulate night/dark garage
-            A.RandomBrightnessContrast(brightness_limit=(-0.5, -0.4), contrast_limit=(-0.2, -0.1), p=1.0)
+            A.RandomBrightnessContrast(brightness_limit=(-0.4, -0.2), contrast_limit=(-0.2, 0.0), p=1.0)
         ]),
         "glare": A.Compose([
-            A.RandomSunFlare(flare_roi=(0.2, 0, 0.8, 0.5), angle_range=(0, 1), p=1.0)
+            A.RandomSunFlare(flare_roi=(0, 0, 1, 0.5), angle_range=(0, 1), p=1.0)
         ]),
         "fog": A.Compose([
-            A.RandomFog(fog_coef_range=(0.4, 0.6), p=1.0)
+            A.RandomFog(fog_coef_range=(0.3, 0.5), p=1.0)
         ]),
         "sensor_noise": A.Compose([
-            A.GaussNoise(var_limit=(100.0, 300.0), p=1.0),
-            A.HorizontalFlip(p=1.0)  # Flips horizontally to simulate reverse perspective
+            A.GaussNoise(var_limit=(50.0, 150.0), p=1.0),
+            A.HorizontalFlip(p=0.5)
         ])
     }
+
 def augment_claim_image(image_path, output_dir):
     """
     Takes an input image path, applies all 5 pipelines,
@@ -45,9 +45,9 @@ def augment_claim_image(image_path, output_dir):
     augmented_results = []
 
     # 3. Apply each transformation pipeline
+        # 3. Apply each transformation pipeline
     for effect_name, transform in pipelines.items():
-        # Albumentations expects named argument image=...
-     transformed = transform(image=image_rgb.copy())
+        transformed = transform(image=image_rgb.copy())
         aug_rgb = transformed["image"]
 
         # Convert back RGB -> BGR for OpenCV saving
