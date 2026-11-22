@@ -1,7 +1,10 @@
 import os
 import uuid
+import json
+import io
+import zipfile
 from dotenv import load_dotenv
-from flask import Flask, request, jsonify, render_template, send_from_directory
+from flask import Flask, request, jsonify, render_template, send_from_directory, send_file
 from werkzeug.utils import secure_filename
 
 # Import our verified core modules
@@ -65,19 +68,15 @@ def internal_server_error(error):
 # =====================================================================
 @app.route("/", methods=["GET"])
 def index():
-    """Renders the frontend dashboard (built in Milestone 4)."""
+    """Renders the Liquid Glass Actuarial Cockpit."""
     try:
         return render_template("index.html")
-    except Exception:
-        # Graceful fallback before Milestone 4 template is created
+    except Exception as e:
         return jsonify({
             "service": "ClaimAugment AI",
             "version": "1.0.0",
             "status": "healthy",
-            "endpoints": {
-                "process_claim": "POST /api/process-claim",
-                "view_uploads": "GET /uploads/<filename>"
-            }
+            "error": str(e)
         })
 
 @app.route("/uploads/<path:filename>", methods=["GET"])
@@ -113,7 +112,6 @@ def process_claim():
 
     # 2. Sanitize filename & prevent collisions using UUID
     original_clean_name = secure_filename(file.filename)
-    extension = original_clean_name.rsplit(".", 1)[1].lower()
     unique_prefix = uuid.uuid4().hex[:8]
     unique_filename = f"{unique_prefix}_{original_clean_name}"
     saved_input_path = os.path.join(app.config["UPLOAD_FOLDER"], unique_filename)
@@ -159,6 +157,37 @@ def process_claim():
             "status": "error",
             "message": f"Processing failed: {str(e)}"
         }), 500
+
+@app.route("/api/export-zip", methods=["POST"])
+def export_zip():
+    """
+    Bundles the original photo, all 5 augmented photos, and an AI metadata manifest
+    into an in-memory ZIP archive for instant 1-click download.
+    """
+    data = request.get_json()
+    if not data or "images" not in data:
+        return jsonify({"status": "error", "message": "No images provided"}), 400
+
+    zip_buffer = io.BytesIO()
+    with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zip_file:
+        # 1. Add images
+        for img in data["images"]:
+            filename = os.path.basename(img["url"])
+            file_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+            if os.path.exists(file_path):
+                zip_file.write(file_path, arcname=f"dataset/{filename}")
+
+        # 2. Add AI assessment manifest
+        manifest_content = json.dumps(data.get("ai_assessment", {}), indent=2)
+        zip_file.writestr("dataset/ai_assessment_manifest.json", manifest_content)
+
+    zip_buffer.seek(0)
+    return send_file(
+        zip_buffer,
+        mimetype="application/zip",
+        as_attachment=True,
+        download_name="ClaimAugment_Synthetic_Dataset.zip"
+    )
 
 # =====================================================================
 # APPLICATION ENTRYPOINT
