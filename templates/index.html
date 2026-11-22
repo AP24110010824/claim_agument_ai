@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClaimAugment AI | Automotive Damage Assessment & Dataset Engine</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+        <div class="nav-brand">
+            <span class="brand-icon">🚗⚡</span>
+            <div class="brand-text">
+                <h2>ClaimAugment <span class="badge-ai">AI</span></h2>
+                <p>InsurTech Damage Assessment & Synthetic Augmentation Engine</p>
+            </div>
+        </div>
+        <div class="system-status">
+            <span class="status-dot"></span>
+            <span>Groq LPU Active (openai/gpt-oss-20b)</span>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="container">
+        <!-- LEFT PANEL: Claim Ingestion Form -->
+        <section class="card input-card">
+            <h3>📋 New Claim Submission</h3>
+            <p class="subtitle">Upload damage photo & collision notes for automated AI appraisal.</p>
+
+            <form id="claimForm">
+                <!-- Dropzone Area -->
+                <div class="dropzone" id="dropzone">
+                    <input type="file" id="photoInput" name="photo" accept="image/png, image/jpeg, image/jpg, image/webp" hidden>
+                    <div class="dropzone-content" id="dropzonePrompt">
+                        <span class="upload-icon">📷</span>
+                        <p><strong>Click to upload</strong> or drag and drop</p>
+                        <span class="file-hint">JPEG, PNG, WEBP (Max 16MB)</span>
+                    </div>
+                    <div class="preview-container" id="previewContainer" style="display: none;">
+                        <img id="imagePreview" src="" alt="Selected vehicle damage photo">
+                        <button type="button" class="btn-remove" id="btnRemovePhoto">✕ Change Photo</button>
+                    </div>
+                </div>
+
+                <!-- Claims Notes Area -->
+                <div class="form-group">
+                    <label for="notesInput">Claim Adjuster Notes / Description</label>
+                    <div class="preset-pills">
+                        <button type="button" class="preset-btn" data-preset="Front bumper crumpled with radiator leak and headlight broken.">💥 Frontal Collision</button>
+                        <button type="button" class="preset-btn" data-preset="Superficial 4-inch paint scratch along rear passenger door.">🎨 Door Scratch</button>
+                        <button type="button" class="preset-btn" data-preset="Hail storm impact dents on hood and cracked windshield glass.">🌨️ Hail & Glass</button>
+                    </div>
+                    <textarea id="notesInput" name="notes" rows="3" placeholder="Enter crash details, impacted components, or damage observations..."></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn-primary" id="btnSubmit">
+                    <span id="btnText">⚡ Process Claim & Generate Dataset</span>
+                    <span id="btnSpinner" class="spinner" style="display: none;"></span>
+                </button>
+            </form>
+        </section>
+
+        <!-- RIGHT PANEL: Live Intelligence & Results -->
+        <section class="card results-card" id="resultsSection">
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState">
+                <span class="empty-icon">📊</span>
+                <h4>No Claim Processed Yet</h4>
+                <p>Upload a vehicle photo and click "Process Claim" to see real-time AI damage categorization and 5-point synthetic dataset augmentations.</p>
+            </div>
+
+            <!-- Dynamic Results Container -->
+            <div id="resultsContent" style="display: none;">
+                <!-- AI Assessment Overview -->
+                <div class="ai-overview-card">
+                    <div class="overview-header">
+                        <h4>🤖 AI Damage Intelligence Report</h4>
+                        <span class="confidence-badge" id="resConfidence">Confidence: 95%</span>
+                    </div>
+                    <div class="metric-badges">
+                        <div class="metric-pill">
+                            <span class="metric-label">Damage Type</span>
+                            <span class="metric-value" id="resDamageType">STRUCTURAL</span>
+                        </div>
+                        <div class="metric-pill">
+                            <span class="metric-label">Severity</span>
+                            <span class="metric-value severity-badge" id="resSeverity">SEVERE</span>
+                        </div>
+                        <div class="metric-pill">
+                            <span class="metric-label">Recommended Action</span>
+                            <span class="metric-value" id="resAction">REPLACE</span>
+                        </div>
+                    </div>
+                    <div class="summary-box">
+                        <p id="resSummary">"Severe collision damage requiring replacement."</p>
+                    </div>
+                </div>
+
+                <!-- Augmented Dataset Gallery -->
+                <div class="dataset-header">
+                    <h4>📸 Augmented Training Dataset (5 Conditions)</h4>
+                    <span class="dataset-count">5 Variations Created</span>
+                </div>
+                
+                <div class="gallery-grid" id="galleryGrid">
+                    <!-- Populated dynamically via JavaScript -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
