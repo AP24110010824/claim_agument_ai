@@ -174,6 +174,182 @@
       color: #ffffff;
       transform: scale(1.04);
     }
+
+    .glass-panel,
+    .glass-card,
+    .glass-inset {
+      min-width: 0;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        overscroll-behavior-y: auto;
+      }
+
+      body .app-shell {
+        padding: 0.75rem;
+      }
+
+      header.app-header {
+        position: sticky;
+        top: 0.5rem;
+        height: auto;
+        min-height: 4rem;
+        flex-wrap: wrap;
+        gap: 0.65rem;
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+      }
+
+      .app-header-brand {
+        flex: 1 1 100%;
+        gap: 0.6rem;
+      }
+
+      .app-header-actions {
+        width: 100%;
+        justify-content: space-between;
+        gap: 0.5rem;
+      }
+
+      .app-header-status {
+        flex: 1 1 auto;
+        min-width: 0;
+        justify-content: center;
+        padding-inline: 0.5rem;
+      }
+
+      .app-header-status > span:last-child {
+        white-space: nowrap;
+      }
+
+      .app-header-actions > button {
+        min-height: 2.5rem;
+        flex: 0 0 auto;
+        padding-inline: 0.65rem;
+      }
+
+      .responsive-panel.glass-panel {
+        padding: 1rem;
+        border-radius: 1.25rem;
+      }
+
+      .viewport-hud.absolute {
+        padding: 0.65rem;
+      }
+
+      .viewport-hud-top,
+      .viewport-hud-bottom {
+        flex-wrap: wrap;
+        gap: 0.4rem;
+      }
+
+      .viewport-file-chip {
+        max-width: 72%;
+        min-width: 0;
+      }
+
+      #hud-file-meta {
+        overflow-wrap: anywhere;
+      }
+
+      .viewport-hud-bottom > span {
+        max-width: 65%;
+        white-space: normal;
+        line-height: 1.4;
+      }
+
+      #impact-tags-container > button {
+        min-height: 2.5rem;
+      }
+
+      .notes-label-row {
+        flex-wrap: wrap;
+        gap: 0.35rem;
+      }
+
+      #adjuster-notes {
+        min-height: 7rem;
+        font-size: 16px;
+      }
+
+      #process-claim-btn {
+        min-height: 3rem;
+        line-height: 1.35;
+      }
+
+      .report-heading {
+        width: 100%;
+      }
+
+      .report-confidence {
+        max-width: 100%;
+      }
+
+      .report-metrics.grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .report-metrics > div {
+        overflow-wrap: anywhere;
+      }
+
+      .financial-grid.grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .financial-grid > div {
+        overflow-wrap: anywhere;
+      }
+
+      .dataset-actions,
+      .dataset-action-buttons {
+        width: 100%;
+      }
+
+      .dataset-action-buttons {
+        flex-wrap: wrap;
+      }
+
+      .dataset-action-buttons > button {
+        flex: 1 1 100%;
+        justify-content: center;
+        min-height: 2.75rem;
+      }
+
+      #claims-drawer {
+        width: 100vw;
+        max-width: 100vw;
+        height: 100dvh;
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+    }
+
+    @media (max-width: 359px) {
+      .app-header-status > span:nth-last-child(2) {
+        display: none;
+      }
+
+      .report-metrics.grid,
+      .financial-grid.grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .viewport-status-chip {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
   </style>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script id="tailwind-config">
@@ -203,10 +379,10 @@
 <div class="fixed top-1/4 right-14 w-[36rem] h-[36rem] bg-white/[0.035] rounded-full blur-[160px] pointer-events-none -z-10"></div>
 
 <!-- MAIN VIEWPORT CONTENT (Full-width responsive container) -->
-<div class="max-w-[1600px] mx-auto px-6 py-6 min-h-screen flex flex-col">
+<div class="app-shell max-w-[1600px] mx-auto px-6 py-6 min-h-screen flex flex-col">
   <!-- TOP HEADER -->
-  <header class="glass-panel h-16 rounded-2xl px-6 flex items-center justify-between mb-6 sticky top-5 z-40 border border-white/15">
-    <div class="flex items-center gap-4">
+  <header class="app-header glass-panel h-16 rounded-2xl px-6 flex items-center justify-between mb-6 sticky top-5 z-40 border border-white/15">
+    <div class="app-header-brand flex items-center gap-4 min-w-0">
       <div class="w-9 h-9 rounded-xl bg-white flex items-center justify-center text-black shadow-[0_0_16px_rgba(255,255,255,0.4)]">
         <span class="material-symbols-outlined text-[20px] font-bold text-black">bolt</span>
       </div>
@@ -222,8 +398,8 @@
       </div>
     </div>
     
-    <div class="flex items-center gap-3">
-      <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/10 border border-white/20 text-white">
+    <div class="app-header-actions flex items-center gap-3">
+      <div class="app-header-status flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/10 border border-white/20 text-white">
         <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
         <span class="font-label-sm text-[10px] text-zinc-400 uppercase tracking-widest font-semibold">Status:</span>
         <span class="font-label-sm text-xs font-bold text-white">ADJUSTER REVIEW</span>
@@ -241,7 +417,7 @@
     
     <!-- LEFT COLUMN: Claim Submission & Viewport (5 cols) -->
     <div class="xl:col-span-5 flex flex-col gap-6">
-      <div class="glass-panel rounded-3xl p-6 relative overflow-hidden flex flex-col gap-5 border border-white/15">
+      <div class="responsive-panel glass-panel rounded-3xl p-6 relative overflow-hidden flex flex-col gap-5 border border-white/15">
         <div class="flex items-start justify-between gap-3">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-white shadow-[0_0_16px_rgba(255,255,255,0.15)]">
@@ -267,13 +443,13 @@
             <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" id="inspection-master-photo" src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=800&auto=format&fit=crop" alt="Inspection vehicle photo"/>
             <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-black/40 pointer-events-none"></div>
 
-            <div class="absolute inset-0 p-4 pointer-events-none flex flex-col justify-between">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-1.5 glass-pill px-2.5 py-1 rounded-full border border-white/20">
+            <div class="viewport-hud absolute inset-0 p-4 pointer-events-none flex flex-col justify-between">
+              <div class="viewport-hud-top flex items-center justify-between">
+                <div class="viewport-file-chip flex items-center gap-1.5 glass-pill px-2.5 py-1 rounded-full border border-white/20">
                   <span class="material-symbols-outlined text-[13px] text-zinc-300">verified</span>
                   <span class="font-label-sm text-[10px] text-white" id="hud-file-meta">ORIGINAL PHOTO LOADED</span>
                 </div>
-                <div class="flex items-center gap-1.5 glass-pill px-2.5 py-1 rounded-full border border-white/20">
+                <div class="viewport-status-chip flex items-center gap-1.5 glass-pill px-2.5 py-1 rounded-full border border-white/20">
                   <span class="material-symbols-outlined text-[13px] text-cyan-300">crop_free</span>
                   <span class="font-label-sm text-[10px] text-white">OPENCV 4.10 READY</span>
                 </div>
@@ -294,7 +470,7 @@
                 </div>
               </div>
 
-              <div class="flex items-center justify-between pointer-events-auto">
+              <div class="viewport-hud-bottom flex items-center justify-between pointer-events-auto">
                 <span class="font-label-sm text-[10px] text-white font-semibold glass-pill px-2.5 py-1 rounded-full border border-white/30 shadow-[0_0_10px_rgba(255,255,255,0.15)]">
                   CLICK CANVAS TO CHANGE PHOTO
                 </span>
@@ -329,7 +505,7 @@
 
         <!-- Adjuster Notes Input Area -->
         <div>
-          <div class="flex items-center justify-between mb-2">
+          <div class="notes-label-row flex items-center justify-between mb-2">
             <label class="font-label-sm text-[10px] uppercase text-zinc-400 tracking-widest font-semibold" for="adjuster-notes">
               Claim Adjuster Notes / Description
             </label>
@@ -352,9 +528,9 @@
     <div class="xl:col-span-7 flex flex-col gap-6">
       
       <!-- AI Damage Intelligence Report Panel -->
-      <div class="glass-panel rounded-3xl p-6 relative overflow-hidden flex flex-col gap-4 border border-white/15">
+      <div class="responsive-panel glass-panel rounded-3xl p-6 relative overflow-hidden flex flex-col gap-4 border border-white/15">
         <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-white/10">
-          <div class="flex items-center gap-3">
+          <div class="report-heading flex items-center gap-3">
             <div class="w-10 h-10 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-white shadow-[0_0_16px_rgba(255,255,255,0.15)]">
               <span class="material-symbols-outlined text-[22px]">smart_toy</span>
             </div>
@@ -366,14 +542,14 @@
               <p class="text-xs text-zinc-400">Photo-first triage; notes and presets are cross-checked</p>
             </div>
           </div>
-          <div class="pill-chromatic flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-white shadow-[0_0_14px_rgba(255,255,255,0.1)]">
+          <div class="report-confidence pill-chromatic flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-white shadow-[0_0_14px_rgba(255,255,255,0.1)]">
             <span class="material-symbols-outlined text-[15px] text-white">verified_user</span>
             <span class="font-label-sm text-xs font-bold text-white" id="card-confidence">Estimated confidence: pending</span>
           </div>
         </div>
 
         <!-- 3 Glass KPI Metric Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div class="report-metrics grid grid-cols-1 md:grid-cols-3 gap-3">
           <!-- KPI 1: Structural -->
           <div class="p-4 rounded-2xl glass-card flex flex-col justify-between border border-white/15">
             <div class="flex items-center justify-between mb-2">
@@ -452,7 +628,7 @@
         </p>
 
         <!-- Financial & Actuarial Breakdown Strip -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 p-2 rounded-2xl glass-card border border-white/15">
+        <div class="financial-grid grid grid-cols-2 md:grid-cols-4 gap-2.5 p-2 rounded-2xl glass-card border border-white/15">
           <div class="p-3 rounded-xl glass-inset flex flex-col border border-white/10">
             <span class="font-label-sm text-[9px] text-zinc-400 uppercase tracking-wider font-semibold">Illustrative repair estimate</span>
             <span class="font-headline-sm text-base font-bold text-white mt-0.5" id="stat-cost">—</span>
@@ -477,7 +653,7 @@
       </div>
 
       <!-- Augmented Training Dataset (6 Cards) -->
-      <div class="glass-panel rounded-3xl p-6 relative overflow-hidden flex flex-col gap-4 border border-white/15">
+      <div class="responsive-panel glass-panel rounded-3xl p-6 relative overflow-hidden flex flex-col gap-4 border border-white/15">
         <div class="flex flex-wrap items-center justify-between gap-3 pb-2">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-white shadow-[0_0_16px_rgba(255,255,255,0.15)]">
@@ -605,8 +781,8 @@
         </div>
 
         <!-- Real Action Bar -->
-        <div class="mt-2 pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
-          <div class="flex items-center gap-2">
+        <div class="dataset-actions mt-2 pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
+          <div class="dataset-action-buttons flex items-center gap-2">
             <button class="btn-chromatic-secondary px-4 py-2.5 rounded-xl glass-pill text-white font-label-md text-xs flex items-center gap-2 transition-all border border-white/20 cursor-pointer" id="btn-export-zip" type="button">
               <span class="material-symbols-outlined text-[16px] text-zinc-300">archive</span>
               <span>Export Dataset (ZIP)</span>
