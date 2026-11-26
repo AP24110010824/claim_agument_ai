@@ -216,9 +216,9 @@
       </div>
       <div class="hidden md:flex items-center gap-2 ml-4 px-3 py-1.5 rounded-full glass-pill text-xs border border-white/15">
         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.9)]"></span>
-        <span class="font-label-sm text-[11px] text-zinc-300 font-semibold">Groq LPU (openai/gpt-oss-20b)</span>
+        <span class="font-label-sm text-[11px] text-zinc-300 font-semibold">Groq Vision • Photo-first</span>
         <span class="text-zinc-500">•</span>
-        <span class="font-label-sm text-[11px] text-cyan-300 font-medium" id="hud-latency">~28ms latency</span>
+        <span class="font-label-sm text-[11px] text-cyan-300 font-medium" id="hud-latency">No inference yet</span>
       </div>
     </div>
     
@@ -226,8 +226,13 @@
       <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/10 border border-white/20 text-white">
         <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
         <span class="font-label-sm text-[10px] text-zinc-400 uppercase tracking-widest font-semibold">Status:</span>
-        <span class="font-label-sm text-xs font-bold text-white">PRODUCTION ACTIVE</span>
+        <span class="font-label-sm text-xs font-bold text-white">ADJUSTER REVIEW</span>
       </div>
+      <button id="btn-toggle-claims-drawer" type="button" aria-controls="claims-drawer" aria-expanded="false" class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white transition-all cursor-pointer shadow-[0_0_12px_rgba(255,255,255,0.08)]">
+        <span class="material-symbols-outlined text-[17px] text-cyan-400">history</span>
+        <span class="font-label-sm text-xs font-semibold">Audit Ledger</span>
+        <span id="badge-claims-count" class="px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-cyan-400/20 text-cyan-300 border border-cyan-400/30">0</span>
+      </button>
     </div>
   </header>
 
@@ -247,7 +252,7 @@
                 <h2 class="font-headline-sm text-base text-white font-bold tracking-tight">New Claim Submission</h2>
                 <span class="font-label-sm text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-zinc-200 border border-white/20 font-semibold">LIVE PIPELINE</span>
               </div>
-              <p class="text-xs text-zinc-400 mt-0.5">Upload damage photo & collision notes for automated AI appraisal.</p>
+              <p class="text-xs text-zinc-400 mt-0.5">Upload a damage photo for AI-assisted triage and adjuster review.</p>
             </div>
           </div>
           <span class="font-label-sm text-[11px] px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white flex items-center gap-1.5 shadow-[0_0_12px_rgba(255,255,255,0.15)]">
@@ -304,21 +309,22 @@
 
         <!-- Collision Impact Zone Selectors -->
         <div>
-          <label class="block font-label-sm text-[10px] uppercase text-zinc-400 mb-2 tracking-widest font-semibold">Collision Impact Zone Presets</label>
+          <label class="block font-label-sm text-[10px] uppercase text-zinc-400 mb-2 tracking-widest font-semibold">Optional Context Preset</label>
           <div class="flex flex-wrap gap-2" id="impact-tags-container">
-            <button class="px-3.5 py-1.5 rounded-full bg-white text-black font-bold text-xs flex items-center gap-1.5 shadow-[0_0_18px_rgba(255,255,255,0.35)] transition-all cursor-pointer" data-note="Front bumper crumpled with radiator core leak, frame rails compromised, and headlight shattered." type="button">
+            <button class="px-3.5 py-1.5 rounded-full bg-white text-black font-bold text-xs flex items-center gap-1.5 shadow-[0_0_18px_rgba(255,255,255,0.35)] transition-all cursor-pointer" data-preset="frontal_collision" aria-pressed="true" type="button">
               <span class="material-symbols-outlined text-[15px] text-black font-bold">emergency</span>
               <span>Frontal Collision</span>
             </button>
-            <button class="px-3.5 py-1.5 rounded-full glass-card pill-chromatic text-zinc-300 text-xs font-medium flex items-center gap-1.5 transition-all border border-white/20 cursor-pointer" data-note="Superficial 5-inch paint scratch along passenger door panel, clear coat abrasion only." type="button">
+            <button class="px-3.5 py-1.5 rounded-full glass-card pill-chromatic text-zinc-300 text-xs font-medium flex items-center gap-1.5 transition-all border border-white/20 cursor-pointer" data-preset="door_scratch" aria-pressed="false" type="button">
               <span class="material-symbols-outlined text-[15px] text-zinc-400">car_crash</span>
               <span>Door Scratch</span>
             </button>
-            <button class="px-3.5 py-1.5 rounded-full glass-card pill-chromatic text-zinc-300 text-xs font-medium flex items-center gap-1.5 transition-all border border-white/20 cursor-pointer" data-note="Severe hail storm damage across hood panel and cracked front windshield safety glass." type="button">
+            <button class="px-3.5 py-1.5 rounded-full glass-card pill-chromatic text-zinc-300 text-xs font-medium flex items-center gap-1.5 transition-all border border-white/20 cursor-pointer" data-preset="hail_glass" aria-pressed="false" type="button">
               <span class="material-symbols-outlined text-[15px] text-zinc-400">grain</span>
               <span>Hail &amp; Glass</span>
             </button>
           </div>
+          <p class="text-[11px] text-zinc-500 mt-2">Presets are hints only. The uploaded photo is the primary evidence.</p>
         </div>
 
         <!-- Adjuster Notes Input Area -->
@@ -327,10 +333,10 @@
             <label class="font-label-sm text-[10px] uppercase text-zinc-400 tracking-widest font-semibold" for="adjuster-notes">
               Claim Adjuster Notes / Description
             </label>
-            <span class="font-label-sm text-[10px] text-cyan-400">Actuarial NLP Verified</span>
+            <span class="font-label-sm text-[10px] text-cyan-400">Notes are contextual, not verified evidence</span>
           </div>
           <div class="relative group">
-            <textarea class="w-full rounded-2xl glass-inset p-3.5 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/40 transition-all resize-none leading-relaxed border border-white/15" id="adjuster-notes" rows="3">Front bumper crumpled with radiator core leak, frame rails compromised, and headlight shattered.</textarea>
+            <textarea class="w-full rounded-2xl glass-inset p-3.5 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/40 transition-all resize-none leading-relaxed border border-white/15" id="adjuster-notes" rows="3" placeholder="Optional adjuster observations; describe what was reported without letting it override the photo."></textarea>
           </div>
         </div>
 
@@ -355,14 +361,14 @@
             <div>
               <div class="flex items-center gap-2">
                 <h3 class="font-headline-sm text-base text-white font-bold tracking-tight">AI Damage Intelligence Report</h3>
-                <span class="font-label-sm text-[10px] text-zinc-400">Actuary Engine</span>
+                <span class="font-label-sm text-[10px] text-zinc-400">Vision-assisted assessment</span>
               </div>
-              <p class="text-xs text-zinc-400">Multi-modal deep visual feature extraction</p>
+              <p class="text-xs text-zinc-400">Photo-first triage; notes and presets are cross-checked</p>
             </div>
           </div>
           <div class="pill-chromatic flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-white shadow-[0_0_14px_rgba(255,255,255,0.1)]">
             <span class="material-symbols-outlined text-[15px] text-white">verified_user</span>
-            <span class="font-label-sm text-xs font-bold text-white" id="card-confidence">Confidence: 94.8%</span>
+            <span class="font-label-sm text-xs font-bold text-white" id="card-confidence">Estimated confidence: pending</span>
           </div>
         </div>
 
@@ -375,8 +381,8 @@
               <span class="material-symbols-outlined text-[17px] text-zinc-300">category</span>
             </div>
             <div>
-              <div class="font-headline-sm text-lg font-bold text-white tracking-tight" id="card-damage-type">STRUCTURAL</div>
-              <div class="text-xs text-zinc-400 mt-0.5">Impact Vector Classified</div>
+              <div class="font-headline-sm text-lg font-bold text-white tracking-tight" id="card-damage-type">PENDING</div>
+              <div class="text-xs text-zinc-400 mt-0.5">Run photo analysis</div>
             </div>
             <div class="w-full bg-white/15 h-1.5 rounded-full mt-3 overflow-hidden p-[1px]">
               <div class="bg-gradient-to-r from-cyan-400 to-blue-500 h-full w-[85%] rounded-full shadow-[0_0_8px_rgba(0,240,255,0.6)]"></div>
@@ -388,16 +394,15 @@
             <div class="flex items-center justify-between mb-2">
               <span class="font-label-sm text-[10px] text-zinc-400 uppercase tracking-wider font-semibold">SEVERITY</span>
               <span class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/15 border border-white/30 text-white font-label-sm text-[9px] font-bold uppercase shadow-[0_0_10px_rgba(255,255,255,0.15)]" id="card-severity-badge">
-                <span class="w-1.5 h-1.5 rounded-full bg-pink-500 animate-ping"></span>
-                Critical
+                Pending
               </span>
             </div>
             <div>
-              <div class="font-headline-sm text-lg font-bold text-white tracking-tight" id="card-severity-text">SEVERE</div>
-              <div class="text-xs text-zinc-400 mt-0.5">Crumple threshold evaluation</div>
+              <div class="font-headline-sm text-lg font-bold text-white tracking-tight" id="card-severity-text">PENDING</div>
+              <div class="text-xs text-zinc-400 mt-0.5">Visible damage only</div>
             </div>
             <div class="w-full bg-white/15 h-1.5 rounded-full mt-3 overflow-hidden p-[1px]">
-              <div class="bg-gradient-to-r from-pink-500 to-rose-400 h-full w-[90%] rounded-full shadow-[0_0_8px_rgba(236,72,153,0.6)]" id="card-severity-bar"></div>
+              <div class="bg-gradient-to-r from-pink-500 to-rose-400 h-full w-0 rounded-full shadow-[0_0_8px_rgba(236,72,153,0.6)]" id="card-severity-bar"></div>
             </div>
           </div>
 
@@ -408,8 +413,8 @@
               <span class="material-symbols-outlined text-[17px] text-zinc-300">build</span>
             </div>
             <div>
-              <div class="font-headline-sm text-lg font-bold text-white tracking-tight" id="card-action-text">REPAIR</div>
-              <div class="text-xs text-zinc-400 mt-0.5">Assembly & Alignment</div>
+              <div class="font-headline-sm text-lg font-bold text-white tracking-tight" id="card-action-text">PENDING</div>
+              <div class="text-xs text-zinc-400 mt-0.5">AI estimate; adjuster decision required</div>
             </div>
             <div class="w-full bg-white/15 h-1.5 rounded-full mt-3 overflow-hidden p-[1px]">
               <div class="bg-gradient-to-r from-purple-400 to-cyan-400 h-full w-[70%] rounded-full shadow-[0_0_8px_rgba(139,92,246,0.5)]"></div>
@@ -424,36 +429,49 @@
           </div>
           <div class="flex-1">
             <p class="text-xs text-zinc-200 italic leading-relaxed" id="card-summary-text">
-              “Front impact from collision caused severe structural damage requiring radiator core replacement and frame realignment.”
+              Upload a photo and process the claim to see visible findings. This AI estimate is not a final insurance decision.
             </p>
             <div class="flex items-center justify-between mt-2.5 pt-2 border-t border-white/10 font-label-sm text-[10px]">
-              <span class="text-white font-semibold">Actuarial Assessment Synthesizer • Groq LPU</span>
-              <span class="text-zinc-500">Zero Hallucination Verified</span>
+              <span class="text-white font-semibold">Groq vision assessment</span>
+              <span class="text-zinc-500">AI estimate • adjuster must verify</span>
             </div>
           </div>
         </div>
 
+        <div id="review-warning" class="hidden rounded-2xl border border-amber-300/40 bg-amber-400/10 p-4" role="alert">
+          <p class="text-sm font-bold text-amber-200">Adjuster review required</p>
+          <ul id="review-reasons" class="mt-2 list-disc pl-5 text-xs leading-relaxed text-amber-100"></ul>
+        </div>
+
+        <div class="rounded-2xl glass-card border border-white/10 p-4">
+          <p class="font-label-sm text-[10px] uppercase tracking-widest text-zinc-400">Visible photo evidence</p>
+          <ul id="card-visual-findings" class="mt-2 list-disc pl-5 text-xs leading-relaxed text-zinc-200"></ul>
+        </div>
+        <p id="card-inference-status" class="font-mono text-[10px] text-zinc-500 break-all" aria-live="polite">
+          No Groq vision request has been made yet.
+        </p>
+
         <!-- Financial & Actuarial Breakdown Strip -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 p-2 rounded-2xl glass-card border border-white/15">
           <div class="p-3 rounded-xl glass-inset flex flex-col border border-white/10">
-            <span class="font-label-sm text-[9px] text-zinc-400 uppercase tracking-wider font-semibold">Est. Total Cost</span>
-            <span class="font-headline-sm text-base font-bold text-white mt-0.5" id="stat-cost">$8,450.00</span>
-            <span class="font-label-sm text-[10px] text-zinc-400 mt-0.5">Parts + Labor Blend</span>
+            <span class="font-label-sm text-[9px] text-zinc-400 uppercase tracking-wider font-semibold">Illustrative repair estimate</span>
+            <span class="font-headline-sm text-base font-bold text-white mt-0.5" id="stat-cost">—</span>
+            <span class="font-label-sm text-[10px] text-zinc-400 mt-0.5">Built-in rates; verify locally</span>
           </div>
           <div class="p-3 rounded-xl glass-inset flex flex-col border border-white/10">
             <span class="font-label-sm text-[9px] text-zinc-400 uppercase tracking-wider font-semibold">Labor Est.</span>
-            <span class="font-headline-sm text-base font-bold text-white mt-0.5" id="stat-labor">34.5 hrs</span>
+            <span class="font-headline-sm text-base font-bold text-white mt-0.5" id="stat-labor">—</span>
             <span class="font-label-sm text-[10px] text-zinc-400 mt-0.5">Certified Shop Rate</span>
           </div>
           <div class="p-3 rounded-xl glass-inset flex flex-col border border-white/10">
-            <span class="font-label-sm text-[9px] text-zinc-400 uppercase tracking-wider font-semibold">Total Loss Prob.</span>
-            <span class="font-headline-sm text-base font-bold text-white mt-0.5" id="stat-loss">22%</span>
-            <span class="font-label-sm text-[10px] text-zinc-400 mt-0.5">Threshold at 75%</span>
+            <span class="font-label-sm text-[9px] text-zinc-400 uppercase tracking-wider font-semibold">Cost / $14K reference</span>
+            <span class="font-headline-sm text-base font-bold text-white mt-0.5" id="stat-loss">—</span>
+            <span class="font-label-sm text-[10px] text-zinc-400 mt-0.5">Screening ratio, not probability</span>
           </div>
           <div class="p-3 rounded-xl glass-inset flex flex-col border border-white/10">
-            <span class="font-label-sm text-[9px] text-zinc-400 uppercase tracking-wider font-semibold">Fraud Risk</span>
-            <span class="font-headline-sm text-base font-bold text-white mt-0.5">0.04%</span>
-            <span class="font-label-sm text-[10px] text-emerald-400 mt-0.5">Clean Metadata Match</span>
+            <span class="font-label-sm text-[9px] text-zinc-400 uppercase tracking-wider font-semibold">Input consistency</span>
+            <span class="font-headline-sm text-base font-bold text-white mt-0.5" id="stat-consistency">Not checked</span>
+            <span class="font-label-sm text-[10px] text-zinc-400 mt-0.5">Photo vs. notes and preset</span>
           </div>
         </div>
       </div>
@@ -608,11 +626,40 @@
   </main>
 </div>
 
+<!-- CLAIMS AUDIT LEDGER DRAWER -->
+<div id="claims-drawer-backdrop" class="fixed inset-0 bg-black/70 backdrop-blur-md z-50 hidden transition-opacity duration-300 opacity-0" aria-hidden="true"></div>
+<aside id="claims-drawer" class="fixed top-0 right-0 h-full w-[460px] max-w-[95vw] z-50 glass-panel border-l border-white/20 shadow-[-20px_0_50px_rgba(0,0,0,0.85)] flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out hidden" aria-labelledby="claims-drawer-title" aria-hidden="true">
+  <div class="px-5 py-5 border-b border-white/10">
+    <div class="flex items-start justify-between gap-4">
+      <div>
+        <h2 id="claims-drawer-title" class="font-headline-sm text-lg font-bold tracking-tight text-white">Claims Audit Ledger</h2>
+        <p class="font-label-sm text-[11px] leading-relaxed text-zinc-400 mt-1">Cryptographically Verified Historical Claims (SHA-256)</p>
+      </div>
+      <button id="btn-close-drawer" type="button" aria-label="Close claims audit ledger" class="w-9 h-9 shrink-0 rounded-xl bg-white/5 hover:bg-white/15 border border-white/15 text-zinc-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer">
+        <span class="material-symbols-outlined text-[19px]">close</span>
+      </button>
+    </div>
+    <label class="relative block mt-5">
+      <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-zinc-500">search</span>
+      <input id="claims-search-input" type="search" autocomplete="off" placeholder="Search by Claim ID, Damage, or Hash..." class="w-full rounded-xl bg-black/30 border border-white/15 focus:border-cyan-400/50 focus:ring-1 focus:ring-cyan-400/30 text-sm text-white placeholder:text-zinc-500 pl-10 pr-3 py-3 outline-none transition-colors"/>
+    </label>
+  </div>
+  <div id="claims-list-container" class="flex-1 overflow-y-auto p-5 space-y-4 scroll-smooth" aria-live="polite">
+    <div class="space-y-4" aria-hidden="true">
+      <div class="h-48 rounded-2xl bg-white/[0.04] border border-white/10 animate-pulse"></div>
+      <div class="h-48 rounded-2xl bg-white/[0.04] border border-white/10 animate-pulse"></div>
+    </div>
+  </div>
+</aside>
+
 <!-- CLIENT JAVASCRIPT: 100% Functional Event Wiring -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
     let currentSelectedFile = null;
     let latestResponseData = null;
+    let cachedClaims = [];
+    let drawerCloseTimeout = null;
+    let selectedPreset = "frontal_collision";
 
     const fileInput = document.getElementById("hidden-file-input");
     const viewportContainer = document.getElementById("viewport-container");
@@ -623,6 +670,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const processBtn = document.getElementById("process-claim-btn");
     const btnIcon = document.getElementById("btn-icon");
     const btnLabel = document.getElementById("btn-label");
+    const claimsDrawer = document.getElementById("claims-drawer");
+    const claimsDrawerBackdrop = document.getElementById("claims-drawer-backdrop");
+    const claimsListContainer = document.getElementById("claims-list-container");
+    const claimsSearchInput = document.getElementById("claims-search-input");
+    const claimsCountBadge = document.getElementById("badge-claims-count");
+    const toggleClaimsDrawerButton = document.getElementById("btn-toggle-claims-drawer");
 
     // Report Cards
     const cardConfidence = document.getElementById("card-confidence");
@@ -635,6 +688,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const statCost = document.getElementById("stat-cost");
     const statLabor = document.getElementById("stat-labor");
     const statLoss = document.getElementById("stat-loss");
+    const statConsistency = document.getElementById("stat-consistency");
+    const reviewWarning = document.getElementById("review-warning");
+    const reviewReasons = document.getElementById("review-reasons");
+    const visualFindings = document.getElementById("card-visual-findings");
+    const inferenceStatus = document.getElementById("card-inference-status");
 
     // 1. File Upload Handler
     viewportContainer.addEventListener("click", () => fileInput.click());
@@ -655,18 +713,20 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // 2. Preset Buttons Handler
+    // 2. Presets provide context without replacing adjuster notes.
     document.querySelectorAll("#impact-tags-container button").forEach((btn) => {
         btn.addEventListener("click", function() {
+            selectedPreset = this.getAttribute("data-preset") || "";
             document.querySelectorAll("#impact-tags-container button").forEach((b) => {
+                b.setAttribute("aria-pressed", "false");
                 b.className = "px-3.5 py-1.5 rounded-full glass-card pill-chromatic text-zinc-300 text-xs font-medium flex items-center gap-1.5 transition-all border border-white/20 cursor-pointer";
                 const icon = b.querySelector('.material-symbols-outlined');
                 if (icon) icon.className = "material-symbols-outlined text-[15px] text-zinc-400";
             });
+            this.setAttribute("aria-pressed", "true");
             this.className = "px-3.5 py-1.5 rounded-full bg-white text-black font-bold text-xs flex items-center gap-1.5 shadow-[0_0_18px_rgba(255,255,255,0.35)] transition-all cursor-pointer";
             const icon = this.querySelector('.material-symbols-outlined');
             if (icon) icon.className = "material-symbols-outlined text-[15px] text-black font-bold";
-            adjusterNotes.value = this.getAttribute("data-note");
         });
     });
 
@@ -681,6 +741,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const formData = new FormData();
         formData.append("photo", currentSelectedFile);
         formData.append("notes", adjusterNotes.value.trim());
+        formData.append("preset", selectedPreset);
 
         processBtn.disabled = true;
         btnIcon.className = "material-symbols-outlined text-[20px] animate-spin text-black";
@@ -704,6 +765,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             latestResponseData = result.data;
             renderCockpit(result.data);
+            await fetchClaims();
 
         } catch (err) {
             alert(`Error: ${err.message}`);
@@ -717,13 +779,35 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderCockpit(data) {
         const ai = data.ai_assessment;
 
-        cardConfidence.textContent = `Confidence: ${(ai.confidence_score * 100).toFixed(1)}%`;
+        cardConfidence.textContent = `Estimated confidence: ${(ai.confidence_score * 100).toFixed(1)}%`;
         cardDamageType.textContent = ai.damage_type;
         cardSeverityText.textContent = ai.severity;
         cardActionText.textContent = ai.estimated_action;
         cardSummaryText.textContent = `“${ai.summary}”`;
 
-               if (ai.severity === "SEVERE") {
+        reviewWarning.classList.toggle("hidden", !ai.review_recommended);
+        reviewReasons.replaceChildren(...(ai.review_reasons || []).map((reason) => {
+            const item = document.createElement("li");
+            item.textContent = reason;
+            return item;
+        }));
+        visualFindings.replaceChildren(...(ai.visual_findings || []).map((finding) => {
+            const item = document.createElement("li");
+            item.textContent = finding;
+            return item;
+        }));
+        if (ai.visual_findings && ai.visual_findings.length === 0) {
+            const item = document.createElement("li");
+            item.textContent = "No reliable visual findings were returned; review the image manually.";
+            visualFindings.appendChild(item);
+        }
+
+        const inference = ai.inference;
+        inferenceStatus.textContent = inference
+            ? `Groq request succeeded • model=${inference.model} • request_id=${inference.request_id} • tokens=${inference.prompt_tokens} in/${inference.completion_tokens} out`
+            : "Groq request metadata is unavailable.";
+
+        if (ai.severity === "SEVERE") {
             cardSeverityText.className = "font-headline-sm text-lg font-bold text-rose-400 tracking-tight";
             cardSeverityBar.className = "bg-gradient-to-r from-pink-500 to-rose-400 h-full w-[95%] rounded-full shadow-[0_0_8px_rgba(236,72,153,0.6)]";
             cardSeverityBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-pink-500 animate-ping"></span> Critical';
@@ -743,6 +827,7 @@ document.addEventListener("DOMContentLoaded", () => {
             statLabor.textContent = ai.financial_breakdown.labor_hours;
             statLoss.textContent = ai.financial_breakdown.total_loss_probability;
         }
+        statConsistency.textContent = ai.review_recommended ? "Review required" : "No mismatch detected";
 
         // Update Images
         document.getElementById("card-img-original").src = data.original_image.url;
@@ -755,6 +840,281 @@ document.addEventListener("DOMContentLoaded", () => {
             if (dlEl) dlEl.href = aug.url;
         });
     }
+
+    function openDrawer() {
+        if (drawerCloseTimeout) {
+            clearTimeout(drawerCloseTimeout);
+            drawerCloseTimeout = null;
+        }
+        claimsDrawerBackdrop.classList.remove("hidden");
+        claimsDrawer.classList.remove("hidden");
+        requestAnimationFrame(() => {
+            claimsDrawerBackdrop.classList.remove("opacity-0");
+            claimsDrawerBackdrop.classList.add("opacity-100");
+            claimsDrawer.classList.remove("translate-x-full");
+            claimsDrawer.classList.add("translate-x-0");
+        });
+        claimsDrawer.setAttribute("aria-hidden", "false");
+        toggleClaimsDrawerButton.setAttribute("aria-expanded", "true");
+        document.getElementById("btn-close-drawer").focus();
+    }
+
+    function closeDrawer() {
+        claimsDrawerBackdrop.classList.remove("opacity-100");
+        claimsDrawerBackdrop.classList.add("opacity-0");
+        claimsDrawer.classList.remove("translate-x-0");
+        claimsDrawer.classList.add("translate-x-full");
+        claimsDrawer.setAttribute("aria-hidden", "true");
+        toggleClaimsDrawerButton.setAttribute("aria-expanded", "false");
+        if (drawerCloseTimeout) clearTimeout(drawerCloseTimeout);
+        drawerCloseTimeout = setTimeout(() => {
+            claimsDrawerBackdrop.classList.add("hidden");
+            claimsDrawer.classList.add("hidden");
+            drawerCloseTimeout = null;
+        }, 300);
+    }
+
+    function showClaimsLoading() {
+        claimsListContainer.innerHTML = `
+            <div class="space-y-4" aria-hidden="true">
+              <div class="h-48 rounded-2xl bg-white/[0.04] border border-white/10 animate-pulse"></div>
+              <div class="h-48 rounded-2xl bg-white/[0.04] border border-white/10 animate-pulse"></div>
+            </div>`;
+    }
+
+    async function fetchClaims() {
+        showClaimsLoading();
+        try {
+            const response = await fetch("/api/claims");
+            const result = await response.json();
+            if (!response.ok || result.status !== "success" || !Array.isArray(result.data)) {
+                throw new Error(result.message || "Unable to load claims.");
+            }
+            cachedClaims = result.data;
+            claimsCountBadge.textContent = String(cachedClaims.length);
+            renderClaimsList();
+        } catch (error) {
+            console.error("Claims ledger fetch failed:", error);
+            claimsListContainer.innerHTML = `
+                <div class="rounded-2xl border border-rose-400/20 bg-rose-400/[0.06] p-5 text-center">
+                  <span class="material-symbols-outlined text-rose-300 text-2xl">error</span>
+                  <p class="text-sm text-zinc-300 mt-2">Unable to load the claims ledger.</p>
+                  <button type="button" id="btn-retry-claims" class="mt-4 px-3 py-2 rounded-lg bg-white/10 hover:bg-white/15 border border-white/15 text-xs text-white">Retry</button>
+                </div>`;
+            document.getElementById("btn-retry-claims").addEventListener("click", fetchClaims);
+        }
+    }
+
+    function renderClaimsList() {
+        const query = claimsSearchInput.value.trim().toLowerCase();
+        const filteredClaims = cachedClaims.filter((claim) => {
+            const assessment = claim.assessment || {};
+            const searchableText = [
+                claim.id,
+                claim.claim_number,
+                claim.status,
+                claim.source_image_hash,
+                assessment.damage_type,
+                assessment.summary
+            ].join(" ").toLowerCase();
+            return searchableText.includes(query);
+        });
+
+        if (filteredClaims.length === 0) {
+            const isEmptyLedger = cachedClaims.length === 0;
+            claimsListContainer.innerHTML = `
+                <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-center">
+                  <span class="material-symbols-outlined text-3xl text-zinc-500">${isEmptyLedger ? "inventory_2" : "search_off"}</span>
+                  <p class="text-sm text-zinc-300 mt-3">${isEmptyLedger
+                    ? "No claims recorded in database yet. Process a claim to generate an immutable audit record."
+                    : "No claims match your search."}</p>
+                </div>`;
+            return;
+        }
+
+        claimsListContainer.replaceChildren(...filteredClaims.map(createClaimCard));
+    }
+
+    function createClaimCard(claim) {
+        const assessment = claim.assessment || {};
+        const card = document.createElement("article");
+        card.className = "glass-card rounded-2xl border border-white/10 bg-white/[0.035] p-4 shadow-[0_0_18px_rgba(255,255,255,0.03)]";
+
+        const topRow = document.createElement("div");
+        topRow.className = "flex gap-3";
+        const thumbnail = document.createElement("img");
+        thumbnail.className = "w-[76px] h-[68px] shrink-0 rounded-xl object-cover border border-white/15 bg-black/40";
+        thumbnail.src = claim.source_image_url || "";
+        thumbnail.alt = `Original photo for ${claim.claim_number || "claim"}`;
+        thumbnail.loading = "lazy";
+
+        const heading = document.createElement("div");
+        heading.className = "min-w-0 flex-1";
+        const claimLabel = document.createElement("p");
+        claimLabel.className = "font-mono text-[11px] font-bold tracking-wide text-cyan-200 truncate";
+        claimLabel.textContent = claim.claim_number || claim.id || "Unknown claim";
+        const dateLabel = document.createElement("p");
+        dateLabel.className = "font-mono text-[10px] text-zinc-500 mt-1";
+        dateLabel.textContent = formatClaimTimestamp(claim.created_at);
+
+        const severity = (assessment.severity || "UNKNOWN").toUpperCase();
+        const severityStyle = severity === "SEVERE"
+            ? "bg-rose-400/10 text-rose-300 border-rose-400/25"
+            : severity === "MODERATE"
+                ? "bg-amber-400/10 text-amber-300 border-amber-400/25"
+                : severity === "MINOR"
+                    ? "bg-emerald-400/10 text-emerald-300 border-emerald-400/25"
+                    : "bg-zinc-400/10 text-zinc-300 border-zinc-400/25";
+        const severityBadge = document.createElement("span");
+        severityBadge.className = `inline-flex mt-2 px-2 py-0.5 rounded-md border text-[9px] font-bold tracking-widest ${severityStyle}`;
+        severityBadge.textContent = severity === "SEVERE" ? "CRITICAL" : severity;
+
+        heading.append(claimLabel, dateLabel, severityBadge);
+        topRow.append(thumbnail, heading);
+
+        const financialRow = document.createElement("div");
+        financialRow.className = "grid grid-cols-2 gap-3 mt-4";
+        financialRow.append(
+            createMetric("TOTAL ESTIMATE", assessment.total_cost || "$0.00"),
+            createMetric("LABOR", assessment.labor_hours || "0.0 hrs")
+        );
+
+        const summary = document.createElement("p");
+        summary.className = "text-xs leading-relaxed text-zinc-400 mt-3 line-clamp-2";
+        summary.textContent = assessment.summary || "No damage summary recorded.";
+
+        const hashPill = document.createElement("div");
+        hashPill.className = "mt-3 flex items-center gap-2 rounded-lg bg-black/30 border border-white/10 px-2.5 py-2";
+        const hashIcon = document.createElement("span");
+        hashIcon.className = "material-symbols-outlined text-[14px] text-cyan-400 shrink-0";
+        hashIcon.textContent = "fingerprint";
+        const hashValue = document.createElement("span");
+        hashValue.className = "font-mono text-[10px] text-zinc-400 truncate flex-1";
+        hashValue.textContent = truncateHash(claim.source_image_hash);
+        hashValue.title = claim.source_image_hash || "";
+        const copyButton = document.createElement("button");
+        copyButton.type = "button";
+        copyButton.className = "shrink-0 flex items-center gap-1 text-[10px] text-zinc-400 hover:text-cyan-300 transition-colors cursor-pointer";
+        copyButton.setAttribute("aria-label", "Copy full SHA-256 hash");
+        const copyIcon = document.createElement("span");
+        copyIcon.className = "material-symbols-outlined text-[14px]";
+        copyIcon.textContent = "content_copy";
+        const copyLabel = document.createElement("span");
+        copyLabel.textContent = "Copy";
+        copyButton.append(copyIcon, copyLabel);
+        copyButton.addEventListener("click", () => copyClaimHash(claim.source_image_hash, copyButton));
+        hashPill.append(hashIcon, hashValue, copyButton);
+
+        const replayButton = document.createElement("button");
+        replayButton.type = "button";
+        replayButton.className = "w-full mt-4 flex items-center justify-center gap-2 rounded-xl bg-white/10 hover:bg-cyan-400/15 border border-white/15 hover:border-cyan-300/30 px-3 py-2.5 text-xs font-semibold text-white transition-all cursor-pointer";
+        const replayIcon = document.createElement("span");
+        replayIcon.className = "material-symbols-outlined text-[16px] text-cyan-300";
+        replayIcon.textContent = "replay";
+        replayButton.append(replayIcon, document.createTextNode("Replay in Cockpit"));
+        replayButton.addEventListener("click", () => loadHistoricalClaim(claim));
+
+        card.append(topRow, financialRow, summary, hashPill, replayButton);
+        return card;
+    }
+
+    function createMetric(label, value) {
+        const container = document.createElement("div");
+        container.className = "rounded-lg bg-white/[0.035] border border-white/[0.07] px-2.5 py-2";
+        const title = document.createElement("p");
+        title.className = "font-label-sm text-[8px] uppercase tracking-widest text-zinc-500";
+        title.textContent = label;
+        const metricValue = document.createElement("p");
+        metricValue.className = "font-mono text-xs font-semibold text-zinc-100 mt-1 truncate";
+        metricValue.textContent = value;
+        container.append(title, metricValue);
+        return container;
+    }
+
+    function formatClaimTimestamp(value) {
+        const hasTimezone = typeof value === "string" && /(?:Z|[+-]\d{2}:?\d{2})$/i.test(value);
+        const date = new Date(hasTimezone ? value : `${value}Z`);
+        if (Number.isNaN(date.getTime())) return "Timestamp unavailable";
+        return `${date.toLocaleString(undefined, {
+            timeZone: "UTC",
+            year: "numeric",
+            month: "short",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false
+        })} UTC`;
+    }
+
+    function truncateHash(hash) {
+        if (!hash) return "SHA-256 unavailable";
+        return hash.length > 24 ? `${hash.slice(0, 12)}...${hash.slice(-8)}` : hash;
+    }
+
+    async function copyClaimHash(hash, button) {
+        if (!hash) return;
+        const icon = button.querySelector(".material-symbols-outlined");
+        const label = button.querySelector("span:last-child");
+        try {
+            await navigator.clipboard.writeText(hash);
+            icon.textContent = "check";
+            label.textContent = "Copied!";
+            button.classList.add("text-emerald-300");
+        } catch (error) {
+            console.error("Unable to copy claim hash:", error);
+            icon.textContent = "error";
+            label.textContent = "Failed";
+        }
+        setTimeout(() => {
+            icon.textContent = "content_copy";
+            label.textContent = "Copy";
+            button.classList.remove("text-emerald-300");
+        }, 1800);
+    }
+
+    function loadHistoricalClaim(claim) {
+        if (!claim.assessment) {
+            alert("This historical claim has no damage assessment to replay.");
+            return;
+        }
+        const cockpitData = {
+            claim_id: claim.id,
+            claim_number: claim.claim_number,
+            source_image_hash: claim.source_image_hash,
+            original_image: { url: claim.source_image_url },
+            augmented_images: claim.augmented_photos || [],
+            ai_assessment: {
+                damage_type: claim.assessment.damage_type,
+                severity: claim.assessment.severity,
+                estimated_action: claim.assessment.estimated_action,
+                confidence_score: claim.assessment.confidence_score,
+                summary: claim.assessment.summary,
+                financial_breakdown: {
+                    total_cost: claim.assessment.total_cost,
+                    labor_hours: claim.assessment.labor_hours,
+                    parts_cost: claim.assessment.parts_cost,
+                    total_loss_probability: claim.assessment.total_loss_probability
+                }
+            }
+        };
+        latestResponseData = cockpitData;
+        renderCockpit(cockpitData);
+        masterPhoto.src = claim.source_image_url;
+        hudFileMeta.textContent = `${claim.claim_number} • VERIFIED SHA-256`;
+        closeDrawer();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    toggleClaimsDrawerButton.addEventListener("click", openDrawer);
+    document.getElementById("btn-close-drawer").addEventListener("click", closeDrawer);
+    claimsDrawerBackdrop.addEventListener("click", closeDrawer);
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !claimsDrawer.classList.contains("translate-x-full")) {
+            closeDrawer();
+        }
+    });
+    claimsSearchInput.addEventListener("input", renderClaimsList);
+    fetchClaims();
 
     // 4. One-Click ZIP Export
     document.getElementById("btn-export-zip").addEventListener("click", async () => {

@@ -4,12 +4,18 @@
 
 # Virtual Environment (like node_modules/)
 venv/
+.venv/
 
 # Environment variables (SECRETS!)
 .env
 
 # Uploaded images (user data - don't commit)
 uploads/
+
+# Local databases and instance data (may contain claim records)
+instance/
+*.db
+*.sqlite3
 
 # Python cache files
 __pycache__/

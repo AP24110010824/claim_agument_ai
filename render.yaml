@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: claimaugment-ai
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python run_production.py
+    healthCheckPath: /healthz
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_VISION_MODEL
+        value: qwen/qwen3.8-27b
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        value: sqlite:////var/data/claimaugment.db
+      - key: UPLOAD_FOLDER
+        value: /var/data/uploads
+    disk:
+      name: claimaugment-data
+      mountPath: /var/data
+      sizeGB: 1

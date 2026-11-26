@@ -7,6 +7,7 @@
 
 # --- Web Framework (like Express.js in Node) ---
 Flask==3.0.3
+Flask-SQLAlchemy==3.1.1
 
 # --- Image Processing (the core of our project) ---
 opencv-python-headless==4.10.0.84      # OpenCV without GUI (server-friendly)

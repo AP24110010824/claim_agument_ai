@@ -1,3 +1,4 @@
+import hashlib
 import os
 import sys
 import time
@@ -38,6 +39,15 @@ def generate_sample_dataset(dataset_dir: str, num_samples: int = 3):
 
     return sample_manifest
 
+
+def _image_hash(image_path):
+    digest = hashlib.sha256()
+    with open(image_path, "rb") as image_file:
+        for chunk in iter(lambda: image_file.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 def run_batch_pipeline(input_manifest, output_dir: str):
     """
     Processes a batch of damage photos with:
@@ -64,13 +74,15 @@ def run_batch_pipeline(input_manifest, output_dir: str):
 
         # 2. AI Classification with Caching & Rate Limiting
         notes = claim["notes"]
-        if notes in AI_CACHE:
+        selected_preset = claim.get("preset", "")
+        cache_key = (_image_hash(claim["path"]), notes, selected_preset)
+        if cache_key in AI_CACHE:
             print("   -> ⚡ CACHE HIT! Using cached AI assessment (Saved 1 Groq API Call, 0 tokens).")
-            ai_result = AI_CACHE[notes]
+            ai_result = AI_CACHE[cache_key]
         else:
-            print("   -> 🌐 Calling Groq LPU (openai/gpt-oss-20b)...")
-            ai_result = classify_damage_description(notes)
-            AI_CACHE[notes] = ai_result  # Save to cache
+            print("   -> 🌐 Calling Groq Vision for photo-first classification...")
+            ai_result = classify_damage_description(notes, claim["path"], selected_preset)
+            AI_CACHE[cache_key] = ai_result  # Save image-specific assessment
             
             # Paced Worker Sleep (Rate Limiter)
             if idx < total_images:
